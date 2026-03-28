@@ -21,28 +21,43 @@
         body { background: var(--bg); color: var(--white); min-height: 100vh; padding: 20px; overflow-x: hidden; }
         .neo-box { background: var(--white); border: 4px solid var(--black); box-shadow: 10px 10px 0px var(--black); color: var(--black); transition: 0.2s; }
         .neo-box:hover { transform: translate(-4px, -4px); box-shadow: 14px 14px 0px var(--black); }
+        
         header { text-align: center; padding: 40px 20px; }
         .logo { background: var(--yellow); padding: 15px 40px; display: inline-block; transform: rotate(-2deg); border: 5px solid var(--black); box-shadow: 12px 12px 0px var(--black); margin-bottom: 20px; }
         .logo h1 { font-size: 3.5rem; font-weight: 800; }
         .tagline { font-size: 1.4rem; color: var(--yellow); font-weight: 600; text-shadow: 3px 3px 0px var(--black); }
 
-        /* Dashboard Grid */
-        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; max-width: 1100px; margin: 50px auto; padding: 20px; }
-        .nav-card { padding: 35px 20px; text-decoration: none; text-align: center; font-weight: 800; font-size: 1.2rem; display: flex; flex-direction: column; gap: 15px; border-radius: 0; }
-        .nav-card i { font-size: 3.5rem; }
+        /* Navigation & Sections */
+        .page-section { display: none; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .page-section.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Games Section */
-        .section-title { text-align: center; margin: 80px 0 40px; font-size: 2.2rem; font-weight: 800; text-transform: uppercase; }
-        .title-box { background: var(--white); color: var(--black); display: inline-block; padding: 10px 40px; border: 4px solid var(--black); box-shadow: 8px 8px 0px var(--black); transform: skew(-5deg); }
-        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .game-card { padding: 30px; display: flex; flex-direction: column; height: 100%; }
+        /* Dashboard Grid */
+        #dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; max-width: 1100px; margin: 50px auto; }
+        .nav-card { padding: 35px 20px; cursor: pointer; text-align: center; font-weight: 800; font-size: 1.2rem; display: flex; flex-direction: column; gap: 15px; }
+        .nav-card span:first-child { font-size: 3.5rem; }
+
+        /* Back Button */
+        .btn-back { display: inline-block; background: var(--yellow); color: var(--black); padding: 10px 20px; font-weight: 800; border: 3px solid var(--black); box-shadow: 5px 5px 0px var(--black); text-decoration: none; margin-bottom: 30px; cursor: pointer; }
+        .btn-back:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0px var(--black); }
+
+        /* Content Styles */
+        .section-title { text-align: center; margin-bottom: 40px; }
+        .title-box { background: var(--white); color: var(--black); display: inline-block; padding: 10px 40px; border: 4px solid var(--black); box-shadow: 8px 8px 0px var(--black); transform: skew(-5deg); font-weight: 800; font-size: 1.8rem; }
+        
+        .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .item-card { background: var(--white); color: var(--black); padding: 20px; border: 3px solid var(--black); box-shadow: 6px 6px 0px var(--black); }
+        .item-card h3 { margin-bottom: 10px; font-weight: 800; }
+
+        /* Games Grid specific */
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .game-card { padding: 30px; display: flex; flex-direction: column; height: 100%; color: white; }
         .game-emoji { font-size: 3.5rem; margin-bottom: 20px; }
         .game-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 12px; }
         .btn-play { margin-top: auto; background: var(--black); color: white; text-align: center; padding: 15px; text-decoration: none; font-weight: 800; border: 3px solid var(--black); transition: 0.2s; }
         .btn-play:hover { background: white; color: black; }
 
         footer { text-align: center; padding: 50px; margin-top: 100px; background: var(--yellow); color: var(--black); border-top: 5px solid var(--black); font-weight: 600; }
-        html { scroll-behavior: smooth; }
     </style>
 </head>
 <body>
@@ -52,95 +67,91 @@
         <div style="margin-top: 10px; font-weight: 600; opacity: 0.8;">by Agung Aljabari, M.Pd.</div>
     </header>
 
-    <div class="dashboard">
-        <a href="#games" class="nav-card neo-box" style="background: var(--green);">
-            <span>🎮</span>
-            <span>GAME EDUKASI</span>
-        </a>
-        <a href="#" class="nav-card neo-box" style="background: var(--blue);">
-            <span>📚</span>
-            <span>MODUL AJAR</span>
-        </a>
-        <a href="#" class="nav-card neo-box" style="background: var(--orange);">
-            <span>📝</span>
-            <span>LKPD</span>
-        </a>
-        <a href="#" class="nav-card neo-box" style="background: var(--purple);">
-            <span>📋</span>
-            <span>DAFTAR HADIR</span>
-        </a>
-        <a href="#" class="nav-card neo-box" style="background: var(--pink);">
-            <span>🎁</span>
-            <span>DAFTAR HADIAH</span>
-        </a>
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="page-section active">
+        <div class="nav-card neo-box" style="background: var(--green);" onclick="showSection('games')">
+            <span>🎮</span><span>GAME EDUKASI</span>
+        </div>
+        <div class="nav-card neo-box" style="background: var(--blue);" onclick="showSection('modul')">
+            <span>📚</span><span>MODUL AJAR</span>
+        </div>
+        <div class="nav-card neo-box" style="background: var(--orange);" onclick="showSection('lkpd')">
+            <span>📝</span><span>LKPD</span>
+        </div>
+        <div class="nav-card neo-box" style="background: var(--purple);" onclick="showSection('absen')">
+            <span>📋</span><span>DAFTAR HADIR</span>
+        </div>
+        <div class="nav-card neo-box" style="background: var(--pink);" onclick="showSection('hadiah')">
+            <span>🎁</span><span>DAFTAR HADIAH</span>
+        </div>
     </div>
 
-    <div id="games">
-        <div class="section-title">
-            <div class="title-box">KOLEKSI GAME (11)</div>
-        </div>
+    <!-- Games Section -->
+    <div id="games" class="page-section">
+        <div class="btn-back" onclick="showSection('dashboard')">⬅ KEMBALI KE BERANDA</div>
+        <div class="section-title"><div class="title-box">KOLEKSI GAME (11)</div></div>
         <div class="game-grid">
-            <div class="game-card neo-box" style="background: #7C3AED; color: white;">
+            <div class="game-card neo-box" style="background: #7C3AED;">
                 <div class="game-emoji">🚀</div>
                 <h2 class="game-title">GALAKSI ANGKA</h2>
                 <p>Tantangan matematika di luar angkasa.</p>
                 <a href="galaksi-angka.html" class="btn-play">MAIN SEKARANG</a>
             </div>
-            <div class="game-card neo-box" style="background: #0891B2; color: white;">
+            <div class="game-card neo-box" style="background: #0891B2;">
                 <div class="game-emoji">🔍</div>
                 <h2 class="game-title">KATA SAKTI</h2>
                 <p>Temukan kata tersembunyi.</p>
                 <a href="kata-sakti.html" class="btn-play">MAIN SEKARANG</a>
             </div>
-            <div class="game-card neo-box" style="background: #DC2626; color: white;">
+            <div class="game-card neo-box" style="background: #DC2626;">
                 <div class="game-emoji">🏃</div>
                 <h2 class="game-title">PESTA KAMPUNG</h2>
                 <p>Lari dan kumpulkan poin!</p>
                 <a href="pesta-kampung.html" class="btn-play">MAIN SEKARANG</a>
             </div>
-            <div class="game-card neo-box" style="background: #92400E; color: white;">
+            <div class="game-card neo-box" style="background: #92400E;">
                 <div class="game-emoji">🎲</div>
                 <h2 class="game-title">PAPAN NUSANTARA</h2>
                 <p>Ular tangga edukatif Indonesia.</p>
                 <a href="papan-nusantara.html" class="btn-play">MAIN SEKARANG</a>
             </div>
-            <div class="game-card neo-box" style="background: #1E3A8A; color: white;">
+            <div class="game-card neo-box" style="background: #1E3A8A;">
                 <div class="game-emoji">⚔️</div>
                 <h2 class="game-title">JAGOAN KATA</h2>
                 <p>Uji kosakata secepat kilat.</p>
                 <a href="jagoan-kata.html" class="btn-play">MAIN SEKARANG</a>
             </div>
-            <div class="game-card neo-box" style="background: #15803D; color: white;">
+            <div class="game-card neo-box" style="background: #15803D;">
                 <div class="game-emoji">🗺️</div>
                 <h2 class="game-title">GEO SQUAD</h2>
                 <p>Misi menjelajahi provinsi Indonesia.</p>
                 <a href="geo-squad.html" class="btn-play">MAIN SEKARANG</a>
             </div>
-            <div class="game-card neo-box" style="background: #BE185D; color: white;">
+            <div class="game-card neo-box" style="background: #BE185D;">
                 <div class="game-emoji">🎨</div>
                 <h2 class="game-title">DOODLE PINTAR</h2>
                 <p>Tebak gambar imajinatif.</p>
                 <a href="doodle-pintar.html" class="btn-play">MAIN SEKARANG</a>
             </div>
-            <div class="game-card neo-box" style="background: #374151; color: white;">
+            <div class="game-card neo-box" style="background: #374151;">
                 <div class="game-emoji">♟️</div>
                 <h2 class="game-title">SI TAKTIK</h2>
                 <p>Logika dan strategi papan.</p>
                 <a href="si-taktik.html" class="btn-play">MAIN SEKARANG</a>
             </div>
-            <div class="game-card neo-box" style="background: #C2410C; color: white;">
+            <div class="game-card neo-box" style="background: #C2410C;">
                 <div class="game-emoji">🪁</div>
                 <h2 class="game-title">TRADISI SERU</h2>
                 <p>Permainan rakyat tradisional.</p>
                 <a href="tradisi-seru.html" class="btn-play">MAIN SEKARANG</a>
             </div>
-            <div class="game-card neo-box" style="background: #EA580C; color: white;">
+            <div class="game-card neo-box" style="background: #EA580C;">
                 <div class="game-emoji">🍳</div>
                 <h2 class="game-title">JURAGAN PECAHAN</h2>
                 <p>Masak sambil belajar pecahan.</p>
                 <a href="juragan-pecahan.html" class="btn-play">MAIN SEKARANG</a>
             </div>
-            <div class="game-card neo-box" style="background: #1D4ED8; color: white;">
+            <div class="game-card neo-box" style="background: #1D4ED8;">
                 <div class="game-emoji">🏀</div>
                 <h2 class="game-title">BOLA PINTAR</h2>
                 <p>Basketball matematika kilat.</p>
@@ -149,9 +160,84 @@
         </div>
     </div>
 
+    <!-- Modul Section -->
+    <div id="modul" class="page-section">
+        <div class="btn-back" onclick="showSection('dashboard')">⬅ KEMBALI KE BERANDA</div>
+        <div class="section-title"><div class="title-box">MODUL AJAR</div></div>
+        <div class="content-grid">
+            <div class="item-card">
+                <h3>Materi Matematika Fase A</h3>
+                <p>Bilangan cacah, penjumlahan, dan pengurangan sederhana.</p>
+                <a href="#" style="font-weight: 800; color: var(--blue);">UNDUH MODUL (PDF)</a>
+            </div>
+            <div class="item-card">
+                <h3>Materi Bahasa Indonesia Fase B</h3>
+                <p>Membaca teks narasi dan menyusun kalimat efektif.</p>
+                <a href="#" style="font-weight: 800; color: var(--blue);">UNDUH MODUL (PDF)</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- LKPD Section -->
+    <div id="lkpd" class="page-section">
+        <div class="btn-back" onclick="showSection('dashboard')">⬅ KEMBALI KE BERANDA</div>
+        <div class="section-title"><div class="title-box">LKPD INTERAKTIF</div></div>
+        <div class="content-grid">
+            <div class="item-card">
+                <h3>LKPD 01: Petualangan Angka</h3>
+                <p>Latihan soal matematika seru dalam bentuk kuis.</p>
+                <a href="#" class="btn-play" style="display:inline-block; margin-top:10px;">KERJAKAN</a>
+            </div>
+            <div class="item-card">
+                <h3>LKPD 02: Detektif Kata</h3>
+                <p>Menganalisis paragraf dan menemukan ide pokok.</p>
+                <a href="#" class="btn-play" style="display:inline-block; margin-top:10px;">KERJAKAN</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Absen Section -->
+    <div id="absen" class="page-section">
+        <div class="btn-back" onclick="showSection('dashboard')">⬅ KEMBALI KE BERANDA</div>
+        <div class="section-title"><div class="title-box">DAFTAR HADIR</div></div>
+        <div class="item-card" style="max-width: 600px; margin: 0 auto; text-align: center;">
+            <h3>Absensi Siswa Hari Ini</h3>
+            <p>Silakan klik tombol di bawah untuk mengisi kehadiran.</p>
+            <button class="btn-play" style="width: 100%; cursor: pointer;">ISI KEHADIRAN</button>
+        </div>
+    </div>
+
+    <!-- Hadiah Section -->
+    <div id="hadiah" class="page-section">
+        <div class="btn-back" onclick="showSection('dashboard')">⬅ KEMBALI KE BERANDA</div>
+        <div class="section-title"><div class="title-box">DAFTAR HADIAH</div></div>
+        <div class="content-grid">
+            <div class="item-card" style="text-align: center;">
+                <div style="font-size: 3rem;">🏆</div>
+                <h3>Stiker "Jagoan Math"</h3>
+                <p>Tukarkan dengan 1000 Poin Game</p>
+            </div>
+            <div class="item-card" style="text-align: center;">
+                <div style="font-size: 3rem;">🎫</div>
+                <h3>Voucher Jajan Kantin</h3>
+                <p>Tukarkan dengan 5000 Poin Game</p>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <p>© 2024 APeL - Aplikasi Pembelajaran Lengkap</p>
         <p>Dikembangkan oleh Agung Aljabari, M.Pd.</p>
     </footer>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+    </script>
 </body>
 </html>
