@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SI TAKTIK - APeL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #37474F;
+            --accent-color: #FF6F00;
+            --player-color: #2196F3;
+            --ai-color: #F44336;
+            --border-width: 4px;
+            --shadow-offset: 6px;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            font-family: 'Black Han Sans', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: black;
+            border: var(--border-width) solid #000;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-offset) var(--shadow-offset) 0px #000;
+            transition: all 0.1s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000;
+        }
+
+        .score-board {
+            background: #fff;
+            color: #000;
+            padding: 10px 20px;
+            border: var(--border-width) solid #000;
+            box-shadow: var(--shadow-offset) var(--shadow-offset) 0px #000;
+            font-size: 1.2rem;
+        }
+
+        #game-container {
+            position: relative;
+            margin: 20px auto;
+            width: 90vw;
+            max-width: 500px;
+            aspect-ratio: 1/1;
+            border: var(--border-width) solid #000;
+            box-shadow: 12px 12px 0px #000;
+            background: #263238;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding-bottom: 40px;
+        }
+
+        #message-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            color: #000;
+            border: var(--border-width) solid #000;
+            padding: 30px;
+            text-align: center;
+            z-index: 100;
+            display: none;
+            box-shadow: 15px 15px 0px #000;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .turn-indicator {
+            margin-top: 10px;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-color);
+            text-shadow: 2px 2px #000;
+        }
+
+        @media (max-width: 480px) {
+            .header { padding: 10px; }
+            .btn { font-size: 0.8rem; padding: 8px 12px; }
+            .score-board { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="https://apel-pembelajaran.vercel.app" class="btn">KEMBALI</a>
+        <div class="score-board">SKOR: <span id="score-val">0</span></div>
+    </div>
+
+    <div class="turn-indicator" id="turn-txt">GILIRANMU</div>
+
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="undoMove()">URUNGKAN (UNDO)</button>
+        <button class="btn" onclick="resetGame()">RESTART</button>
+    </div>
+
+    <div id="message-overlay">
+        <h1 id="win-status">MENANG!</h1>
+        <p>Strategi yang luar biasa.</p>
+        <button class="btn" onclick="resetGame()">MAIN LAGI</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score-val');
+        const turnEl = document.getElementById('turn-txt');
+        const overlay = document.getElementById('message-overlay');
+        const winStatus = document.getElementById('win-status');
+
+        // Game State
+        const BOARD_SIZE = 8;
+        let board = [];
+        let selectedPiece = null;
+        let validMoves = [];
+        let currentPlayer = 1; // 1: Player (Blue), 2: AI (Red)
+        let score = 0;
+        let history = [];
+        let isGameOver = false;
+
+        // Audio Context Setup
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(freq, type = 'square', duration = 0.1) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        function initGame() {
+            // Set canvas resolution
+            canvas.width = 800;
+            canvas.height = 800;
+            
+            board = Array(BOARD_SIZE).fill().map(() => Array(BOARD_SIZE).fill(0));
+            
+            // Place AI pieces (Red) - Top 3 rows
+            for (let r = 0; r < 3; r++) {
+                for (let c = 0; c < BOARD_SIZE; c++) {
+                    if ((r + c) % 2 !== 0) board[r][c] = 2;
+                }
+            }
+            
+            // Place Player pieces (Blue) - Bottom 3 rows
+            for (let r = 5; r < 8; r++) {
+                for (let c = 0; c < BOARD_SIZE; c++) {
+                    if ((r + c) % 2 !== 0) board[r][c] = 1;
+                }
+            }
+            
+            score = 0;
+            currentPlayer = 1;
+            isGameOver = false;
+            history = [];
+            scoreEl.innerText = score;
+            overlay.style.display = 'none';
+            turnEl.innerText = "GILIRANMU";
+            draw();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const tileSize = canvas.width / BOARD_SIZE;
+
+            // Draw Board
+            for (let r = 0; r < BOARD_SIZE; r++) {
+                for (let c = 0; c < BOARD_SIZE; c++) {
+                    ctx.fillStyle = (r + c) % 2 === 0 ? '#455A64' : '#263238';
+                    ctx.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
+                    
+                    // Highlight selected
+                    if (selectedPiece && selectedPiece.r === r && selectedPiece.c === c) {
+                        ctx.fillStyle = 'rgba(255, 111, 0, 0.4)';
+                        ctx.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
+                    }
+
+                    // Highlight valid moves
+                    validMoves.forEach(m => {
+                        if (m.r === r && m.c === c) {
+                            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                            ctx.beginPath();
+                            ctx.arc(c * tileSize + tileSize/2, r * tileSize + tileSize/2, 10, 0, Math.PI*2);
+                            ctx.fill();
+                        }
+                    });
+
+                    // Draw Pieces
+                    const piece = board[r][c];
+                    if (piece !== 0) {
+                        const centerX = c * tileSize + tileSize / 2;
+                        const centerY = r * tileSize + tileSize / 2;
+                        const radius = tileSize * 0.35;
+
+                        // Piece Shadow (Neubrutalism Style)
+                        ctx.fillStyle = '#000';
+                        ctx.beginPath();
+                        ctx.arc(centerX + 4, centerY + 4, radius, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        // Main Piece
+                        ctx.fillStyle = piece === 1 ? '#2196F3' : '#F44336';
+                        ctx.strokeStyle = '#000';
+                        ctx.lineWidth = 4;
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.stroke();
+
+                        // Detail Circle
+                        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                        ctx.lineWidth = 2;
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY, radius * 0.7, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function getValidMoves(r, c, player) {
+            const moves = [];
+            const directions = player === 1 ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]];
+            const opponent = player === 1 ? 2 : 1;
+
+            directions.forEach(d => {
+                const nr = r + d[0];
+                const nc = c + d[1];
+                
+                // Simple Move
+                if (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE) {
+                    if (board[nr][nc] === 0) {
+                        moves.push({ r: nr, c: nc, type: 'move' });
+                    } 
+                    // Jump Move
+                    else if (board[nr][nc] === opponent) {
+                        const jr = nr + d[0];
+                        const jc = nc + d[1];
+                        if (jr >= 0 && jr < BOARD_SIZE && jc >= 0 && jc < BOARD_SIZE && board[jr][jc] === 0) {
+                            moves.push({ r: jr, c: jc, type: 'jump', jumped: { r: nr, c: nc } });
+                        }
+                    }
+                }
+            });
+            return moves;
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (currentPlayer !== 1 || isGameOver) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+            
+            const col = Math.floor(x / (canvas.width / BOARD_SIZE));
+            const row = Math.floor(y / (canvas.height / BOARD_SIZE));
+
+            handleInteraction(row, col);
+        });
+
+        function handleInteraction(row, col) {
+            // Check if clicking on a valid move
+            const move = validMoves.find(m => m.r === row && m.c === col);
+            
+            if (move) {
+                executeMove(selectedPiece.r, selectedPiece.c, move);
+                return;
+            }
+
+            // Select piece
+            if (board[row][col] === 1) {
+                selectedPiece = { r: row, c: col };
+                validMoves = getValidMoves(row, col, 1);
+                playSound(440, 'sine', 0.05);
+            } else {
+                selectedPiece = null;
+                validMoves = [];
+            }
+            draw();
+        }
+
+        function executeMove(fromR, fromC, move) {
+            // Save for undo
+            history.push(JSON.stringify({ board: board, score: score }));
+
+            board[move.r][move.c] = board[fromR][fromC];
+            board[fromR][fromC] = 0;
+
+            if (move.type === 'jump') {
+                board[move.jumped.r][move.jumped.c] = 0;
+                if (currentPlayer === 1) {
+                    score++;
+                    scoreEl.innerText = score;
+                    playSound(600, 'triangle', 0.15);
+                } else {
+                    playSound(200, 'triangle', 0.15);
+                }
+            } else {
+                playSound(300, 'sine', 0.1);
+            }
+
+            selectedPiece = null;
+            validMoves = [];
+            checkWin();
+            
+            if (!isGameOver) {
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                turnEl.innerText = currentPlayer === 1 ? "GILIRANMU" : "AI BERPIKIR...";
+                draw();
+
+                if (currentPlayer === 2) {
+                    setTimeout(aiMove, 800);
+                }
+            }
+        }
+
+        function aiMove() {
+            if (isGameOver) return;
+            
+            let allMoves = [];
+            for (let r = 0; r < BOARD_SIZE; r++) {
+                for (let c = 0; c < BOARD_SIZE; c++) {
+                    if (board[r][c] === 2) {
+                        const moves = getValidMoves(r, c, 2);
+                        moves.forEach(m => allMoves.push({ fromR: r, fromC: c, ...m }));
+                    }
+                }
+            }
+
+            if (allMoves.length > 0) {
+                // Prioritize jumps
+                const jumps = allMoves.filter(m => m.type === 'jump');
+                const finalMove = jumps.length > 0 
+                    ? jumps[Math.floor(Math.random() * jumps.length)] 
+                    : allMoves[Math.floor(Math.random() * allMoves.length)];
+                
+                executeMove(finalMove.fromR, finalMove.fromC, finalMove);
+            } else {
+                endGame(1); // AI no moves, player wins
+            }
+        }
+
+        function undoMove() {
+            if (history.length > 0 && !isGameOver) {
+                const lastState = JSON.parse(history.pop());
+                board = lastState.board;
+                score = lastState.score;
+                scoreEl.innerText = score;
+                currentPlayer = 1;
+                turnEl.innerText = "GILIRANMU";
+                selectedPiece = null;
+                validMoves = [];
+                draw();
+                playSound(150, 'sine', 0.2);
+            }
+        }
+
+        function checkWin() {
+            let p1Count = 0;
+            let p2Count = 0;
+            
+            for (let r = 0; r < BOARD_SIZE; r++) {
+                for (let c = 0; c < BOARD_SIZE; c++) {
+                    if (board[r][c] === 1) p1Count++;
+                    if (board[r][c] === 2) p2Count++;
+                }
+            }
+
+            if (p1Count === 0) endGame(2);
+            else if (p2Count === 0) endGame(1);
+        }
+
+        function endGame(winner) {
+            isGameOver = true;
+            overlay.style.display = 'block';
+            if (winner === 1) {
+                winStatus.innerText = "KAMU MENANG!";
+                playSound(880, 'square', 0.5);
+            } else {
+                winStatus.innerText = "AI MENANG!";
+                playSound(110, 'square', 0.5);
+            }
+            draw();
+        }
+
+        function resetGame() {
+            initGame();
+        }
+
+        // Handle Window Resize
+        window.addEventListener('resize', () => {
+            draw();
+        });
+
+        // Start
+        initGame();
+
+    </script>
+</body>
+</html>
