@@ -187,30 +187,30 @@
     <div id="game-container">
         <canvas id="gameCanvas"></canvas>
 
-        <div id=\"screen-start\" class=\"overlay\">
+        <div id="screen-start" class="overlay">
             <h1>GALAKSI ANGKA</h1>
-            <p style=\"margin-bottom: 20px;\">Pilih Jenjang Sekolahmu:</p>
-            <button class=\"btn btn-purple\" onclick=\"setGrade('SD')\">SD (Tambah/Kurang)</button>
-            <button class=\"btn btn-yellow\" onclick=\"setGrade('SMP')\">SMP (Kali/Bagi)</button>
-            <button class=\"btn btn-outline\" onclick=\"setGrade('SMA')\">SMA (Akar/Pangkat)</button>
-            <a href=\"/#games\" class=\"btn btn-outline\" style=\"text-decoration: none; text-align: center;\">⬅ Kembali ke Portal 🍎</a>
+            <p style="margin-bottom: 20px;">Pilih Jenjang Sekolahmu:</p>
+            <button class="btn btn-purple" onclick="setGrade('SD')">SD (Tambah/Kurang)</button>
+            <button class="btn btn-yellow" onclick="setGrade('SMP')">SMP (Kali/Bagi)</button>
+            <button class="btn btn-outline" onclick="setGrade('SMA')">SMA (Akar/Pangkat)</button>
+            <a href="/#games" class="btn btn-outline" style="text-decoration: none; text-align: center;">⬅ Kembali ke Portal 🍎</a>
         </div>
 
-        <div id=\"screen-result\" class=\"overlay hidden\">
+        <div id="screen-result" class="overlay hidden">
             <h1>GAME OVER</h1>
-            <div class=\"stars-rating\" id=\"res-stars\">⭐⭐⭐</div>
+            <div class="stars-rating" id="res-stars">⭐⭐⭐</div>
             <p>Skor Akhir:</p>
-            <div class=\"final-score-text\" id=\"res-score\">0</div>
-            <p id=\"res-msg\" style=\"margin: 20px 0;\">Hebat! Terus berlatih ya!</p>
-            <button class=\"btn btn-yellow\" onclick=\"showMenu()\">MAIN LAGI</button>
-            <button class=\"btn btn-outline\" onclick=\"showMenu()\">GANTI JENJANG</button>
+            <div class="final-score-text" id="res-score">0</div>
+            <p id="res-msg" style="margin: 20px 0;">Hebat! Terus berlatih ya!</p>
+            <button class="btn btn-yellow" onclick="showMenu()">MAIN LAGI</button>
+            <button class="btn btn-outline" onclick="showMenu()">GANTI JENJANG</button>
         </div>
     </div>
 
-    <div id=\"controls\">
-        <button class=\"ans-btn\" onclick=\"handleAnswer(0)\">?</button>
-        <button class=\"ans-btn\" onclick=\"handleAnswer(1)\">?</button>
-        <button class=\"ans-btn\" onclick=\"handleAnswer(2)\">?</button>
+    <div id="controls">
+        <button class="ans-btn" onclick="handleAnswer(0)">?</button>
+        <button class="ans-btn" onclick="handleAnswer(1)">?</button>
+        <button class="ans-btn" onclick="handleAnswer(2)">?</button>
     </div>
 
     <script>
@@ -301,7 +301,7 @@
                     a = Math.floor(Math.random() * 15) + 1;
                     ans = Math.floor(Math.random() * 15) + 1;
                     let b_val = a + ans;
-                    op = `x + ${a} = ${b_val}. x?`; a = ''; b = '';
+                    op = "x + " + a + " = " + b_val + ". x?"; a = ''; b = '';
                 }
             }
 
@@ -313,10 +313,10 @@
             }
             options.sort(() => Math.random() - 0.5);
 
-            let text = \"\";
+            let text = "";
             if (grade === 'SMA') {
-                if (op === '√') text = `√${a}`;
-                else if (op === '²') text = `${a}²`;
+                if (op === '√') text = "√" + a;
+                else if (op === '²') text = a + "²";
                 else text = op;
             } else {
                 text = a + ' ' + op + ' ' + b;
@@ -379,7 +379,6 @@
                 ansBtns[idx].classList.add('correct');
                 playBeep(800, 0.1);
                 
-                // Shoot Laser
                 lasers.push({
                     x: canvas.width / 2,
                     y: canvas.height - 50,
@@ -425,10 +424,10 @@
             document.getElementById('screen-result').classList.remove('hidden');
             document.getElementById('res-score').innerText = score;
             
-            let stars = \"⭐\";
-            let msg = \"Ayo belajar lagi!\";
-            if (score >= 100) { stars = \"⭐⭐⭐\"; msg = \"Luar Biasa! Kamu jenius!\"; }
-            else if (score >= 50) { stars = \"⭐⭐\"; msg = \"Hebat! Pertahankan!\"; }
+            let stars = "⭐";
+            let msg = "Ayo belajar lagi!";
+            if (score >= 100) { stars = "⭐⭐⭐"; msg = "Luar Biasa! Kamu jenius!"; }
+            else if (score >= 50) { stars = "⭐⭐"; msg = "Hebat! Pertahankan!"; }
             document.getElementById('res-stars').innerText = stars;
             document.getElementById('res-msg').innerText = msg;
         }
@@ -436,8 +435,6 @@
         function drawMeteor(ctx, x, y, radius) {
             ctx.save();
             ctx.translate(x, y);
-            
-            // Rock Shape
             ctx.fillStyle = '#4B5563';
             ctx.beginPath();
             for (let i = 0; i < 10; i++) {
@@ -450,20 +447,15 @@
             }
             ctx.closePath();
             ctx.fill();
-            
-            // Border
             ctx.strokeStyle = '#1F2937';
             ctx.lineWidth = 3;
             ctx.stroke();
-
-            // Craters
             ctx.fillStyle = '#374151';
             [ {x:-0.3, y:-0.2, r:0.2}, {x:0.4, y:0.1, r:0.15}, {x:-0.1, y:0.4, r:0.1} ].forEach(c => {
                 ctx.beginPath();
                 ctx.arc(c.x * radius, c.y * radius, c.r * radius, 0, Math.PI * 2);
                 ctx.fill();
             });
-
             ctx.restore();
         }
 
@@ -471,7 +463,6 @@
             if (!gameActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Update & Draw Lasers
             for (let i = lasers.length - 1; i >= 0; i--) {
                 let l = lasers[i];
                 ctx.strokeStyle = '#FBBF24';
@@ -487,18 +478,15 @@
                 if (l.life <= 0) lasers.splice(i, 1);
             }
 
-            // Update & Draw Meteor
             meteor.y += meteor.speed;
             drawMeteor(ctx, meteor.x, meteor.y, meteor.size / 2);
 
-            // Text on Meteor
             ctx.fillStyle = 'white';
             ctx.font = 'bold 22px Poppins';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(currentProblem.text, meteor.x, meteor.y);
 
-            // Timer Bar on Meteor
             const timerWidth = (timer / 10) * 80;
             ctx.fillStyle = timer < 3 ? 'red' : '#FBBF24';
             ctx.fillRect(meteor.x - 40, meteor.y + 50, timerWidth, 8);
@@ -506,7 +494,6 @@
             ctx.lineWidth = 2;
             ctx.strokeRect(meteor.x - 40, meteor.y + 50, 80, 8);
 
-            // Player Rocket
             ctx.font = '55px Arial';
             ctx.textAlign = 'center';
             ctx.fillText('🚀', canvas.width / 2, canvas.height - 30);
