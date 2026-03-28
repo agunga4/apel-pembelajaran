@@ -19,7 +19,7 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: var(--white); min-height: 100vh; padding: 20px; overflow-x: hidden; }
-        
+
         .neo-box { 
             background: var(--white); 
             border: 4px solid var(--black); 
@@ -30,7 +30,7 @@
             cursor: pointer;
         }
         .neo-box:hover { transform: translate(-4px, -4px); box-shadow: 14px 14px 0px var(--black); }
-        
+
         header { text-align: center; padding: 40px 20px; }
         .logo { 
             background: var(--yellow); 
@@ -43,7 +43,7 @@
         }
         .logo h1 { font-size: 3.5rem; font-weight: 800; color: var(--black); }
         .tagline { font-size: 1.4rem; color: var(--yellow); font-weight: 600; text-shadow: 3px 3px 0px var(--black); }
-
+        
         #dashboard { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
@@ -62,10 +62,10 @@
             gap: 20px; 
         }
         .nav-card span:first-child { font-size: 4.5rem; }
-
+        
         .page-section { display: none; max-width: 1200px; margin: 0 auto; padding: 20px; }
         .page-section.active { display: block; animation: fadeIn 0.3s ease; }
-        
+
         @keyframes fadeIn { 
             from { opacity: 0; transform: translateY(10px); } 
             to { opacity: 1; transform: translateY(0); } 
@@ -135,6 +135,7 @@
         .item-card:hover { transform: translate(-4px, -4px); box-shadow: 12px 12px 0px var(--black); }
         .item-card h3 { margin-bottom: 12px; font-weight: 800; text-transform: uppercase; font-size: 1.3rem; }
         .item-card p { color: #444; font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; flex-grow: 1; }
+        
         .game-emoji { font-size: 3.5rem; margin-bottom: 15px; }
 
         footer { 
@@ -151,6 +152,8 @@
         .bg-green { background: var(--green) !important; }
         .bg-blue { background: var(--blue) !important; }
         .bg-orange { background: var(--orange) !important; }
+        .bg-purple { background: var(--purple) !important; }
+        .bg-pink { background: var(--pink) !important; }
 
         @media (max-width: 768px) {
             .logo h1 { font-size: 2.2rem; }
@@ -160,6 +163,7 @@
     </style>
 </head>
 <body>
+
     <header id="main-header">
         <div class="logo"><h1>APeL</h1></div>
         <p class="tagline">Media Belajar Kreatif & Interaktif</p>
@@ -178,8 +182,15 @@
         <div class="nav-card neo-box bg-orange" onclick="showSection('materi')">
             <span>📖</span><span>MATERI BELAJAR</span>
         </div>
+        <div class="nav-card neo-box bg-purple" onclick="showSection('administrasi')">
+            <span>📋</span><span>ADMINISTRASI</span>
+        </div>
+        <div class="nav-card neo-box bg-pink" onclick="showSection('pengembangan')">
+            <span>🎓</span><span>PENGEMBANGAN GURU</span>
+        </div>
     </div>
 
+    <!-- GAMES SECTION -->
     <div id="games" class="page-section">
         <div class="btn-back" onclick="showDashboard()">⬅ KEMBALI KE BERANDA</div>
         <div class="section-header"><div class="title-box">KOLEKSI GAME (11)</div></div>
@@ -242,27 +253,121 @@
         </div>
     </div>
 
+    <!-- MODUL AJAR SECTION -->
     <div id="modul" class="page-section">
         <div class="btn-back" onclick="showDashboard()">⬅ KEMBALI KE BERANDA</div>
         <div class="section-header"><div class="title-box">MODUL AJAR</div></div>
         <div class="content-grid">
-            <div class="item-card neo-box"><h3>Kurikulum Merdeka 4</h3><p>Modul ajar lengkap kelas 4 SD.</p><a href="#" class="btn-play">LIHAT</a></div>
+            <div class="item-card neo-box">
+                <div class="game-emoji">📘</div>
+                <h3>Fase A (Kelas 1-2)</h3>
+                <p>Kumpulan modul ajar Kurikulum Merdeka untuk jenjang awal SD.</p>
+                <a href="#" class="btn-play">LIHAT DAFTAR</a>
+            </div>
+            <div class="item-card neo-box">
+                <div class="game-emoji">📗</div>
+                <h3>Fase B (Kelas 3-4)</h3>
+                <p>Modul ajar inovatif untuk kelas 3 dan 4 SD.</p>
+                <a href="#" class="btn-play">LIHAT DAFTAR</a>
+            </div>
+            <div class="item-card neo-box">
+                <div class="game-emoji">📙</div>
+                <h3>Fase C (Kelas 5-6)</h3>
+                <p>Materi pembelajaran lengkap untuk persiapan ujian sekolah.</p>
+                <a href="#" class="btn-play">LIHAT DAFTAR</a>
+            </div>
         </div>
     </div>
 
+    <!-- LKPD SECTION -->
     <div id="lkpd" class="page-section">
         <div class="btn-back" onclick="showDashboard()">⬅ KEMBALI KE BERANDA</div>
         <div class="section-header"><div class="title-box">LKPD INTERAKTIF</div></div>
         <div class="content-grid">
-            <div class="item-card neo-box"><h3>Latihan Matematika</h3><p>Lembar kerja siswa berbasis game.</p><a href="#" class="btn-play">KERJAKAN</a></div>
+            <div class="item-card neo-box">
+                <div class="game-emoji">✍️</div>
+                <h3>Literasi Bahasa</h3>
+                <p>Lembar kerja membaca dan menulis yang menyenangkan.</p>
+                <a href="#" class="btn-play">KERJAKAN</a>
+            </div>
+            <div class="item-card neo-box">
+                <div class="game-emoji">🔢</div>
+                <h3>Numerasi Cepat</h3>
+                <p>Latihan berhitung dengan metode visual menarik.</p>
+                <a href="#" class="btn-play">KERJAKAN</a>
+            </div>
         </div>
     </div>
 
+    <!-- MATERI BELAJAR SECTION -->
     <div id="materi" class="page-section">
         <div class="btn-back" onclick="showDashboard()">⬅ KEMBALI KE BERANDA</div>
         <div class="section-header"><div class="title-box">MATERI BELAJAR</div></div>
         <div class="content-grid">
-            <div class="item-card neo-box"><h3>Video IPA</h3><p>Materi tentang ekosistem.</p><a href="#" class="btn-play">LIHAT</a></div>
+            <div class="item-card neo-box">
+                <div class="game-emoji">🎬</div>
+                <h3>Video Pembelajaran</h3>
+                <p>Animasi materi IPA, IPS, dan Matematika.</p>
+                <a href="#" class="btn-play">TONTON</a>
+            </div>
+            <div class="item-card neo-box">
+                <div class="game-emoji">📊</div>
+                <h3>Slide Presentasi</h3>
+                <p>Materi dalam format PPT yang siap digunakan di kelas.</p>
+                <a href="#" class="btn-play">UNDUH</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMINISTRASI SECTION -->
+    <div id="administrasi" class="page-section">
+        <div class="btn-back" onclick="showDashboard()">⬅ KEMBALI KE BERANDA</div>
+        <div class="section-header"><div class="title-box">ADMINISTRASI GURU</div></div>
+        <div class="content-grid">
+            <div class="item-card neo-box">
+                <div class="game-emoji">👤</div>
+                <h3>Daftar Hadir</h3>
+                <p>Rekap kehadiran siswa secara digital dan otomatis.</p>
+                <a href="#" class="btn-play">BUKA</a>
+            </div>
+            <div class="item-card neo-box">
+                <div class="game-emoji">📒</div>
+                <h3>Buku Nilai Digital</h3>
+                <p>Kelola nilai tugas dan ujian dalam satu tempat.</p>
+                <a href="#" class="btn-play">BUKA</a>
+            </div>
+            <div class="item-card neo-box">
+                <div class="game-emoji">📅</div>
+                <h3>Jadwal & Rencana</h3>
+                <p>Kalender akademik dan rencana pelaksanaan pembelajaran.</p>
+                <a href="#" class="btn-play">LIHAT</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- PENGEMBANGAN GURU SECTION -->
+    <div id="pengembangan" class="page-section">
+        <div class="btn-back" onclick="showDashboard()">⬅ KEMBALI KE BERANDA</div>
+        <div class="section-header"><div class="title-box">PENGEMBANGAN GURU</div></div>
+        <div class="content-grid">
+            <div class="item-card neo-box">
+                <div class="game-emoji">📂</div>
+                <h3>Perangkat Siap Pakai</h3>
+                <p>Contoh RPP dan Modul Ajar terbaik dari rekan guru.</p>
+                <a href="#" class="btn-play">UNDUH</a>
+            </div>
+            <div class="item-card neo-box">
+                <div class="game-emoji">💡</div>
+                <h3>Ide Praktik Baik</h3>
+                <p>Inspirasi metode mengajar kreatif dan inovatif.</p>
+                <a href="#" class="btn-play">BACA</a>
+            </div>
+            <div class="item-card neo-box">
+                <div class="game-emoji">📺</div>
+                <h3>Pelatihan Mini</h3>
+                <p>Video tutorial singkat penggunaan teknologi pendidikan.</p>
+                <a href="#" class="btn-play">IKUTI</a>
+            </div>
         </div>
     </div>
 
