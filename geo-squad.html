@@ -2,16 +2,18 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEO SQUAD - APeL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GEO SQUAD - Geografi Indonesia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2E7D32;
+            --green: #22C55E;
+            --orange: #F97316;
+            --yellow: #FBBF24;
             --white: #FFFFFF;
-            --accent: #FF5722;
-            --black: #000000;
-            --bg: #E8F5E9;
+            --dark: #000000;
+            --shadow: 5px 5px 0px #000000;
+            --border: 4px solid #000000;
         }
 
         * {
@@ -19,62 +21,333 @@
             margin: 0;
             padding: 0;
             font-family: 'Nunito', sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--black);
+            background-color: #FEF3C7;
+            color: var(--dark);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
-            padding: 20px;
+            padding: 15px;
         }
 
-        /* Neubrutalism Style */
-        .nb-card {
-            background: var(--white);
-            border: 4px solid var(--black);
-            box-shadow: 8px 8px 0px var(--black);
-            padding: 20px;
-            transition: all 0.2s ease;
-        }
-
-        .nb-button {
-            background: var(--accent);
-            color: white;
-            border: 3px solid var(--black);
-            box-shadow: 4px 4px 0px var(--black);
-            padding: 12px 24px;
-            font-weight: 900;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-size: 1.1rem;
-            display: inline-block;
-            text-decoration: none;
-            text-align: center;
-            margin: 10px 0;
-        }
-
-        .nb-button:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px var(--black);
-        }
-
-        .nb-button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        /* Layout */
-        #game-container {
-            max-width: 600px;
+        /* Container Game */
+        #app {
             width: 100%;
+            max-width: 450px;
+            background: var(--white);
+            border: var(--border);
+            box-shadow: 10px 10px 0px var(--dark);
             position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 550px;
         }
 
-        .header {
+        /* Header */
+        header {
+            padding: 15px;
+            border-bottom: var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: var(--green);
+        }
+
+        .back-btn {
+            background: var(--orange);
+            color: white;
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 2px solid var(--dark);
+            box-shadow: 3px 3px 0px var(--dark);
+            font-size: 0.8rem;
+            font-weight: 900;
+        }
+
+        .back-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px var(--dark);
+        }
+
+        .score-board {
+            background: var(--white);
+            padding: 4px 12px;
+            border: 2px solid var(--dark);
+            font-weight: 900;
+        }
+
+        /* Screens */
+        .screen {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Typography */
+        h1 { font-size: 2.5rem; line-height: 1; margin-bottom: 10px; -webkit-text-stroke: 1.5px var(--dark); color: var(--yellow); text-shadow: 4px 4px 0px var(--dark); }
+        h2 { font-size: 1.4rem; margin-bottom: 20px; }
+        p { font-weight: 700; margin-bottom: 20px; }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 15px;
+            margin: 8px 0;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border: var(--border);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.1s;
+            text-transform: uppercase;
+        }
+
+        .btn-green { background: var(--green); color: white; }
+        .btn-orange { background: var(--orange); color: white; }
+        .btn-yellow { background: var(--yellow); color: var(--dark); }
+
+        .btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 2px 2px 0px var(--dark);
+        }
+
+        /* Quiz Specific */
+        .question-box {
+            width: 100%;
+            background: #E0F2FE;
+            padding: 20px;
+            border: var(--border);
+            margin-bottom: 20px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow: 4px 4px 0px var(--green);
+        }
+
+        .options-grid { width: 100%; }
+
+        .option-btn {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: var(--white);
+            border: var(--border);
+            box-shadow: 4px 4px 0px var(--dark);
+            font-weight: 800;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .option-btn.correct { background: var(--green); color: white; }
+        .option-btn.wrong { background: #EF4444; color: white; }
+
+        .progress-bar {
+            width: 100%;
+            height: 15px;
+            background: #ddd;
+            border: 2px solid var(--dark);
+            margin-top: auto;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--orange);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* Emoji Decor */
+        .emoji-big { font-size: 4rem; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <header>
+            <a href="/#games" class="back-btn">⬅ KEMBALI</a>
+            <div class="score-board">SKOR: <span id="current-score">0</span></div>
+        </header>
+
+        <!-- Menu Screen -->
+        <div id="screen-menu" class="screen">
+            <div class="emoji-big">🇮🇩</div>
+            <h1>GEO SQUAD</h1>
+            <p>Jelajahi Indonesia & Uji Wawasan Geografimu!</p>
+            <button class="btn btn-green" onclick="startGame()">MULAI MAIN</button>
+            <button class="btn btn-yellow" onclick="showAbout()">TENTANG GAME</button>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="screen-game" class="screen hidden">
+            <div id="question-num" style="margin-bottom: 5px; font-weight: 900; color: var(--orange);">PERTANYAAN 1/10</div>
+            <div class="question-box" id="question-text">Memuat pertanyaan...</div>
+            <div class="options-grid" id="options-container">
+                <!-- Tombol pilihan akan muncul di sini -->
+            </div>
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="screen-result" class="screen hidden">
+            <div class="emoji-big" id="result-emoji">🏆</div>
+            <h1 id="result-title">LUAR BIASA!</h1>
+            <p>Kamu berhasil mengumpulkan skor:</p>
+            <div style="font-size: 3rem; font-weight: 900; margin-bottom: 20px;" id="final-score">0</div>
+            <button class="btn btn-green" onclick="startGame()">MAIN LAGI</button>
+            <button class="btn btn-orange" onclick="goToMenu()">MENU UTAMA</button>
+        </div>
+    </div>
+
+    <script>
+        // Data Pertanyaan (Geografi Indonesia SD)
+        const questionsDB = [
+            { q: "Apa ibukota negara Indonesia?", a: ["Jakarta", "Bandung", "Surabaya", "Medan"], c: 0 },
+            { q: "Pulau manakah yang paling padat penduduknya di Indonesia?", a: ["Sumatera", "Jawa", "Kalimantan", "Sulawesi"], c: 1 },
+            { q: "Gunung tertinggi di Indonesia adalah...", a: ["Gunung Merapi", "Gunung Rinjani", "Puncak Jaya", "Gunung Semeru"], c: 2 },
+            { q: "Danau terbesar di Indonesia yang terletak di Sumatera Utara adalah...", a: ["Danau Batur", "Danau Toba", "Danau Singkarak", "Danau Sentani"], c: 1 },
+            { q: "Lagu daerah 'Ampar-Ampar Pisang' berasal dari provinsi...", a: ["Kalimantan Selatan", "Jawa Tengah", "Papua", "Bali"], c: 0 },
+            { q: "Indonesia terletak di antara dua samudra, yaitu...", a: ["Atlantik & Pasifik", "Hindia & Pasifik", "Hindia & Atlantik", "Arktik & Hindia"], c: 1 },
+            { q: "Suku Asmat berasal dari pulau...", a: ["Sulawesi", "Kalimantan", "Sumatera", "Papua"], c: 3 },
+            { q: "Selat yang memisahkan Pulau Jawa dan Pulau Sumatera adalah...", a: ["Selat Bali", "Selat Sunda", "Selat Makassar", "Selat Madura"], c: 1 },
+            { q: "Komodo adalah hewan langka yang ditemukan di provinsi...", a: ["NTB", "NTT", "Bali", "Maluku"], c: 1 },
+            { q: "Rumah Gadang adalah rumah adat dari daerah...", a: ["Sumatera Barat", "Aceh", "Riau", "Jambi"], c: 0 },
+            { q: "Candi Borobudur terletak di provinsi...", a: ["Jawa Timur", "DIY Yogyakarta", "Jawa Tengah", "Jawa Barat"], c: 2 },
+            { q: "Ibukota dari Provinsi Jawa Timur adalah...", a: ["Malang", "Surabaya", "Semarang", "Bandung"], c: 1 }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let gameQuestions = [];
+        const totalQuestions = 10;
+
+        // Audio Context for Sound Effects
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(freq, type, duration) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        function playCorrect() { playSound(880, 'sine', 0.2); setTimeout(() => playSound(1109, 'sine', 0.3), 100); }
+        function playWrong() { playSound(220, 'square', 0.3); }
+
+        // Navigation Functions
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function startGame() {
+            score = 0;
+            currentQuestionIndex = 0;
+            updateScoreUI();
+            // Shuffle and pick 10 questions
+            gameQuestions = [...questionsDB].sort(() => Math.random() - 0.5).slice(0, totalQuestions);
+            showScreen('screen-game');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const qData = gameQuestions[currentQuestionIndex];
+            document.getElementById('question-num').innerText = `PERTANYAAN ${currentQuestionIndex + 1}/${totalQuestions}`;
+            document.getElementById('question-text').innerText = qData.q;
+            document.getElementById('progress-fill').style.width = `${(currentQuestionIndex / totalQuestions) * 100}%`;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            qData.a.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(idx, btn) {
+            const qData = gameQuestions[currentQuestionIndex];
+            const allBtns = document.querySelectorAll('.option-btn');
+            
+            // Disable all buttons
+            allBtns.forEach(b => b.style.pointerEvents = 'none');
+
+            if (idx === qData.c) {
+                score += 10;
+                btn.classList.add('correct');
+                playCorrect();
+            } else {
+                btn.classList.add('wrong');
+                allBtns[qData.c].classList.add('correct');
+                playWrong();
+            }
+
+            updateScoreUI();
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < totalQuestions) {
+                    loadQuestion();
+                } else {
+                    endGame();
+                }
+            }, 1500);
+        }
+
+        function updateScoreUI() {
+            document.getElementById('current-score').innerText = score;
+        }
+
+        function endGame() {
+            showScreen('screen-result');
+            document.getElementById('final-score').innerText = score;
+            
+            const emoji = document.getElementById('result-emoji');
+            const title = document.getElementById('result-title');
+            
+            if (score >= 80) {
+                emoji.innerText = "🏆";
+                title.innerText = "SANG JUARA!";
+            } else if (score >= 50) {
+                emoji.innerText = "⭐";
+                title.innerText = "HEBAT!";
+            } else {
+                emoji.innerText = "📚";
+                title.innerText = "AYO BELAJAR LAGI!";
+            }
+        }
+
+        function goToMenu() {
+            showScreen('screen-menu');
+        }
+
+        function showAbout() {
+            alert("GEO SQUAD v1.0\nGame edukasi Geografi Indonesia untuk siswa SD.\nSelamat belajar!");
+        }
+    </script>
+</body>
+</html>
