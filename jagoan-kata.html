@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAGOAN KATA - APeL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1A237E;
+            --secondary: #FFEB3B;
+            --accent: #FF5252;
+            --bg: #2E7D32;
+            --border: #000000;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Righteous', cursive;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 20%),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 20%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Neubrutalism Style */
+        .neu-box {
+            background: white;
+            border: 4px solid var(--border);
+            box-shadow: 8px 8px 0px 0px var(--border);
+            transition: all 0.1s ease;
+        }
+
+        .neu-btn {
+            background: var(--secondary);
+            border: 3px solid var(--border);
+            box-shadow: 4px 4px 0px 0px var(--border);
+            cursor: pointer;
+            padding: 10px;
+            font-size: 1.2rem;
+            transition: all 0.1s ease;
+        }
+
+        .neu-btn:active {
+            box-shadow: 0px 0px 0px 0px var(--border);
+            transform: translate(4px, 4px);
+        }
+
+        .neu-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: translate(4px, 4px);
+        }
+
+        #game-container {
+            width: 95%;
+            max-width: 600px;
+            background: #E3F2FD;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 10px;
+            border: 3px solid var(--border);
+        }
+
+        .stats-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Character Visuals */
+        #character-display {
+            height: 180px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            background: #fff;
+            position: relative;
+            border: 3px solid var(--border);
+        }
+
+        .hero-part {
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .visible { opacity: 1; }
+
+        /* Word Display */
+        #word-container {
+            font-size: 2.5rem;
+            letter-spacing: 10px;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--primary);
+            min-height: 60px;
+        }
+
+        .letter-slot {
+            display: inline-block;
+            border-bottom: 5px solid var(--border);
+            ma
