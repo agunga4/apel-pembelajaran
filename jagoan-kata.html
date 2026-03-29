@@ -73,7 +73,8 @@
             z-index: 1;
         }
 
-        header {
+        273
+        
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -274,7 +275,8 @@
         let streak = 0;
         let timer = 30;
         let timerInterval;
-        let gameActive = false;
+        let gameActive
+            let highScore = localStorage.getItem('jagoanKataHigh') || 0;= false;
 
         // Audio Context Setup
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -421,12 +423,16 @@
             if(win) {
                 title.innerText = "HEBAT!";
                 title.style.color = "var(--secondary)";
-                msg.innerText = `Kamu mencapai streak ${streak}!\nTotal Skor: ${score}`;
+        msg.innerText = `Kamu mencapai streak ${streak}!\nTotal Skor: ${score}\nRekor Tertinggi: ${highScore}`;                        
+        // Update high score
+        if(score > highScore) {
+            highScore = score;
+            localStorage.setItem('jagoanKataHigh', score);
+        }
             } else {
                 title.innerText = "YAAH!";
                 title.style.color = "var(--accent)";
-                msg.innerText = `Katanya adalah: ${currentWord}\nTotal Skor: ${score}`;
-            }
+        msg.innerText = `Katanya adalah: ${currentWord}\nTotal Skor: ${score}\nRekor Tertinggi: ${highScore}`;            }
         }
 
         function updateStats() {
