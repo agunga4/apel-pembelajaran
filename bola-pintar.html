@@ -53,8 +53,7 @@
         const canvas = document.getElementById('gameCanvas'); const ctx = canvas.getContext('2d');
         const questionOverlay = document.getElementById('question-overlay'); const scoreVal = document.getElementById('score-val');
         const livesVal = document.getElementById('lives-val'); let score = 0; let lives = 3; let gameActive = false;
-        let balls = []; let currentProblem = { q: "", a: 0 }; let lastSpawn = 0; let spawnRate = 2000; let speedMultiplier = 1;
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    score = 0; lives = 3; balls = []; gameActive = true; currentProblem = { q: '', a: 0 }; let lastSpawn = 0; let spawnRate = 1500; let speedMultiplier = 1; // Faster initial spawn        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(freq, type, duration) {
             const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
             osc.type = type; osc.frequency.value = freq; gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
@@ -102,15 +101,14 @@
                     else { val = currentProblem.a + (Math.floor(Math.random() * 10) + 1) * (Math.random() > 0.5 ? 1 : -1); if (val < 0) val = Math.abs(val) + 2; }
                     balls.push(new Ball(val, i === correctPos));
                 }
-                lastSpawn = now; if (spawnRate > 800) spawnRate -= 50; speedMultiplier += 0.02;
-            }
+        lastSpawn = now; if (spawnRate > 600) spawnRate -= 80; speedMultiplier += 0.04; // Faster difficulty progression            }
         }
         function gameLoop() {
             if (!gameActive) return; ctx.clearRect(0, 0, canvas.width, canvas.height); spawnBalls();
             for (let i = balls.length - 1; i >= 0; i--) {
                 const b = balls[i]; b.update(); b.draw();
                 if (b.y > canvas.height + b.radius) {
-                    if (b.isCorrect) { lives--; playSound(150, 'sawtooth', 0.2); updateUI(); if (lives <= 0) gameOver(); currentProblem = generateProblem(); questionOverlay.innerText = `${currentProblem.q} = ?`; }
+                    if (b.isCorrect) {             if (b.isCorrect) { playSound(150, 'sawtooth', 0.2); updateUI(); if (lives <= 0) gameOver(); currentProblem = generateProblem(); questionOverlay.innerText = `${currentProblem.q} = ?`; }
                     balls.splice(i, 1);
                 }
             }
@@ -130,7 +128,7 @@
             }
         }
         canvas.addEventListener('mousedown', checkClick); canvas.addEventListener('touchstart', (e) => { e.preventDefault(); checkClick(e); }, { passive: false });
-        function gameOver() { gameActive = false; document.getElementById('screen-over').classList.remove('hidden'); document.getElementById('final-score').innerText = score; questionOverlay.classList.add('hidden'); }
+        function gameOver() { gameActive = false;function gameOver() { gameActive = false; const highScore = localStorage.getItem('bolaPintarHigh') || 0; if (score > highScore) localStorage.setItem('bolaPintarHigh', score); document.getElementById('screen-over').classList.remove('hidden'); document.getElementById('final-score').innerText = score; questionOverlay.classList.add('hidden'); }
     </script>
 </body>
 </html>
