@@ -197,12 +197,10 @@
             currentProblem = generateProblem();
             meteor.y = -60;
             meteor.x = canvas.width / 2;
-            meteor.speed = 1.2 + (score / 150);
             meteor.shape = [];
             for(let i=0; i<10; i++) meteor.shape.push(0.8 + Math.random() * 0.4);
             lasers = [];
-            timer = 10;
-            ansBtns.forEach((btn, i) => {
+    meteor.speed = 1.5 + (score / 80); // Faster difficulty scaling
                 btn.innerText = currentProblem.options[i];
                 btn.className = 'ans-btn';
                 btn.disabled = false;
@@ -252,6 +250,7 @@
             const key = 'hiScore_' + grade;
             const hi = localStorage.getItem(key) || 0;
             if (score > hi) localStorage.setItem(key, score);
+                hiEl.innerText = score; // Update high score display
             document.getElementById('screen-result').classList.remove('hidden');
             document.getElementById('res-score').innerText = score;
             let stars = "⭐";
