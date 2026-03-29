@@ -2,9 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GALAKSI ANGKA - Matematika Luar Angkasa</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #7C3AED; --secondary: #FBBF24; --dark: #0F172A; --white: #FFFFFF; --danger: #EF4444; --success: #22C55E; --border: 4px solid #000000; --shadow: 6px 6px 0px #000000; }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
@@ -14,6 +14,7 @@
         @keyframes move { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
         header { width: 100%; max-width: 500px; padding: 15px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
         .stats-box { background: var(--white); color: black; padding: 5px 12px; border: 3px solid black; box-shadow: 3px 3px 0px black; font-size: 0.9rem; font-weight: 800; }
+        .lives { font-size: 1.2rem; }
         #game-container { width: 100%; max-width: 500px; flex: 1; position: relative; overflow: hidden; }
         canvas { display: block; width: 100%; height: 100%; }
         .overlay { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; z-index: 100; }
@@ -23,44 +24,52 @@
         .btn:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0px black; }
         .btn-purple { background: var(--primary); color: white; }
         .btn-yellow { background: var(--secondary); color: black; }
+        .btn-outline { background: white; color: black; }
         #controls { width: 100%; max-width: 500px; padding: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; background: rgba(0, 0, 0, 0.5); border-top: var(--border); }
         .ans-btn { padding: 15px 5px; font-size: 1.4rem; font-weight: 800; border: var(--border); box-shadow: 4px 4px 0px black; background: white; color: black; cursor: pointer; }
         .ans-btn.correct { background: var(--success) !important; color: white; }
         .ans-btn.wrong { background: var(--danger) !important; color: white; }
+        .final-score-text { font-size: 3rem; color: var(--secondary); font-weight: 800; }
+        .stars-rating { font-size: 2.5rem; margin: 10px 0; }
     </style>
 </head>
 <body>
-    <div class="stars" id="star-field"></div>
+    <div id="star-field" class="stars"></div>
     <header>
         <div class="stats-box">SKOR: <span id="score-val">0</span></div>
-        <div class="lives" id="lives-val">❤️❤️❤️</div>
+        <div id="lives-val" class="lives">❤️❤️❤️</div>
         <div class="stats-box">HI: <span id="hi-val">0</span></div>
     </header>
+
     <div id="game-container">
         <canvas id="gameCanvas"></canvas>
+        
         <div id="screen-start" class="overlay">
             <h1>GALAKSI ANGKA</h1>
-            <p style="margin-bottom:20px;font-weight:800">Pilih Jenjang Sekolahmu:</p>
+            <p>Pilih Jenjang Sekolahmu:</p>
             <button class="btn btn-purple" onclick="setGrade('SD')">SD (Tambah/Kurang)</button>
             <button class="btn btn-yellow" onclick="setGrade('SMP')">SMP (Kali/Bagi)</button>
             <button class="btn btn-outline" onclick="setGrade('SMA')">SMA (Akar/Pangkat)</button>
-            <a href="/#games" class="btn btn-outline" style="text-decoration:none;display:inline-block;text-align:center">⬅ Kembali ke Portal 🍎</a>
+            <a href="/#games" class="btn btn-outline" style="text-decoration:none; display:block; text-align:center;">⬅ Kembali ke Portal 🍎</a>
         </div>
+
         <div id="screen-result" class="overlay hidden">
             <h1>GAME OVER</h1>
             <div id="res-stars" class="stars-rating">⭐⭐⭐</div>
             <p>Skor Akhir:</p>
             <div id="res-score" class="final-score-text">0</div>
-            <p id="res-msg" style="margin-bottom:20px;font-weight:800">Hebat! Terus berlatih ya!</p>
-            <button class="btn btn-purple" onclick="startGame()">MAIN LAGI</button>
-            <button class="btn btn-yellow" onclick="showMenu()">GANTI JENJANG</button>
+            <p id="res-msg">Hebat! Terus berlatih ya!</p>
+            <button class="btn btn-yellow" onclick="startGame()">MAIN LAGI</button>
+            <button class="btn btn-outline" onclick="showMenu()">GANTI JENJANG</button>
         </div>
     </div>
+
     <div id="controls">
         <button class="ans-btn" onclick="handleAnswer(0)">?</button>
         <button class="ans-btn" onclick="handleAnswer(1)">?</button>
         <button class="ans-btn" onclick="handleAnswer(2)">?</button>
     </div>
+
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -68,20 +77,38 @@
         const hiEl = document.getElementById('hi-val');
         const livesEl = document.getElementById('lives-val');
         const ansBtns = document.querySelectorAll('.ans-btn');
-        let grade = 'SD', score = 0, lives = 3, gameActive = false, currentProblem = null;
+
+        let grade = 'SD';
+        let score = 0;
+        let lives = 3;
+        let gameActive = false;
+        let currentProblem = null;
         let meteor = { y: -100, x: 0, speed: 1.5, shape: [] };
-        let lasers = [], timer = 10, timerInterval, animationId;
+        let lasers = [];
+        let timer = 10;
+        let timerInterval;
+        let animationId;
+
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playBeep(f, d, t = 'sine') {
-            const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-            o.type = t; o.frequency.setValueAtTime(f, audioCtx.currentTime);
-            g.gain.setValueAtTime(0.1, audioCtx.currentTime); o.connect(g); g.connect(audioCtx.destination);
-            o.start(); o.stop(audioCtx.currentTime + d);
+        function playBeep(freq, duration, type = 'sine') {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e) {}
         }
+
         function createStars() {
             const field = document.getElementById('star-field');
             for (let i = 0; i < 50; i++) {
-                const s = document.createElement('div'); s.className = 'star';
+                const s = document.createElement('div');
+                s.className = 'star';
                 s.style.width = s.style.height = (Math.random() * 3) + 'px';
                 s.style.left = Math.random() * 100 + '%';
                 s.style.animationDuration = (Math.random() * 3 + 2) + 's';
@@ -90,23 +117,49 @@
             }
         }
         createStars();
-        function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
-        window.addEventListener('resize', resize); resize();
+
+        function resize() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
         function generateProblem() {
             let a, b, op, ans, options = [];
             if (grade === 'SD') {
-                a = Math.floor(Math.random() * 15) + 5; b = Math.floor(Math.random() * 10) + 1;
-                if (Math.random() > 0.5) { op = '+'; ans = a + b; } else { op = '-'; ans = a - b; }
+                a = Math.floor(Math.random() * 15) + 5;
+                b = Math.floor(Math.random() * 10) + 1;
+                if (Math.random() > 0.5) { op = '+'; ans = a + b; }
+                else { op = '-'; ans = a - b; }
             } else if (grade === 'SMP') {
                 const t = Math.floor(Math.random() * 3);
-                if (t === 0) { a = Math.floor(Math.random() * 10) + 2; b = Math.floor(Math.random() * 9) + 2; op = '×'; ans = a * b; }
-                else if (t === 1) { ans = Math.floor(Math.random() * 10) + 2; b = Math.floor(Math.random() * 9) + 2; a = ans * b; op = '÷'; }
-                else { a = Math.floor(Math.random() * 20) - 10; b = Math.floor(Math.random() * 20) - 10; op = '+'; ans = a + b; }
+                if (t === 0) {
+                    a = Math.floor(Math.random() * 10) + 2;
+                    b = Math.floor(Math.random() * 9) + 2;
+                    op = '×'; ans = a * b;
+                } else if (t === 1) {
+                    ans = Math.floor(Math.random() * 10) + 2;
+                    b = Math.floor(Math.random() * 9) + 2;
+                    a = ans * b; op = '÷';
+                } else {
+                    a = Math.floor(Math.random() * 20) - 10;
+                    b = Math.floor(Math.random() * 20) - 10;
+                    op = '+'; ans = a + b;
+                }
             } else {
                 const t = Math.floor(Math.random() * 3);
-                if (t === 0) { a = Math.floor(Math.random() * 12) + 2; op = '²'; ans = a * a; }
-                else if (t === 1) { ans = Math.floor(Math.random() * 12) + 2; a = ans * ans; op = '√'; }
-                else { a = Math.floor(Math.random() * 15) + 1; ans = Math.floor(Math.random() * 15) + 1; let sum = a + ans; op = "x + " + a + " = " + sum + ". x?"; a = ''; b = ''; }
+                if (t === 0) {
+                    a = Math.floor(Math.random() * 12) + 2; op = '²'; ans = a * a;
+                } else if (t === 1) {
+                    ans = Math.floor(Math.random() * 12) + 2; a = ans * ans; op = '√';
+                } else {
+                    a = Math.floor(Math.random() * 15) + 1;
+                    ans = Math.floor(Math.random() * 15) + 1;
+                    let sum = a + ans;
+                    op = "x + " + a + " = " + sum + ". x?";
+                    a = ''; b = '';
+                }
             }
             options = [ans];
             while (options.length < 3) {
@@ -118,54 +171,164 @@
             let text = (grade === 'SMA') ? (op === '√' ? "√" + a : (op === '²' ? a + "²" : op)) : (a + ' ' + op + ' ' + b);
             return { text, ans, options };
         }
-        function setGrade(g) { grade = g; hiEl.innerText = localStorage.getItem('hiScore_' + grade) || 0; document.getElementById('screen-start').classList.add('hidden'); startGame(); }
-        function showMenu() { document.getElementById('screen-result').classList.add('hidden'); document.getElementById('screen-start').classList.remove('hidden'); gameActive = false; }
-        function startGame() { score = 0; lives = 3; gameActive = true; document.getElementById('screen-result').classList.add('hidden'); updateUI(); newQuestion(); gameLoop(); }
-        function newQuestion() {
-            currentProblem = generateProblem(); meteor.y = -60; meteor.x = canvas.width / 2; meteor.speed = 1.2 + (score / 150);
-            meteor.shape = []; for(let i=0; i<10; i++) meteor.shape.push(0.8 + Math.random() * 0.4);
-            timer = 10; ansBtns.forEach((btn, i) => { btn.innerText = currentProblem.options[i]; btn.className = 'ans-btn'; btn.disabled = false; });
-            clearInterval(timerInterval); timerInterval = setInterval(() => { if (!gameActive) return; timer -= 0.1; if (timer <= 0) wrongAnswer(); }, 100);
+
+        function setGrade(g) {
+            grade = g;
+            hiEl.innerText = localStorage.getItem('hiScore_' + grade) || 0;
+            document.getElementById('screen-start').classList.add('hidden');
+            startGame();
         }
+
+        function showMenu() {
+            document.getElementById('screen-result').classList.add('hidden');
+            document.getElementById('screen-start').classList.remove('hidden');
+            gameActive = false;
+        }
+
+        function startGame() {
+            score = 0; lives = 3; gameActive = true;
+            document.getElementById('screen-result').classList.add('hidden');
+            updateUI();
+            newQuestion();
+            gameLoop();
+        }
+
+        function newQuestion() {
+            currentProblem = generateProblem();
+            meteor.y = -60;
+            meteor.x = canvas.width / 2;
+            meteor.speed = 1.2 + (score / 150);
+            meteor.shape = [];
+            for(let i=0; i<10; i++) meteor.shape.push(0.8 + Math.random() * 0.4);
+            lasers = [];
+            timer = 10;
+            ansBtns.forEach((btn, i) => {
+                btn.innerText = currentProblem.options[i];
+                btn.className = 'ans-btn';
+                btn.disabled = false;
+            });
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (!gameActive) return;
+                timer -= 0.1;
+                if (timer <= 0) wrongAnswer();
+            }, 100);
+        }
+
         function handleAnswer(idx) {
-            if (!gameActive || lasers.length > 0) return;
+            if (!gameActive) return;
             const chosen = currentProblem.options[idx];
             if (chosen === currentProblem.ans) {
-                ansBtns[idx].classList.add('correct'); playBeep(800, 0.1);
+                ansBtns[idx].classList.add('correct');
+                playBeep(800, 0.1);
                 lasers.push({ x: canvas.width / 2, y: canvas.height - 50 });
             } else {
                 ansBtns[idx].classList.add('wrong');
-                ansBtns.forEach(btn => { if (parseInt(btn.innerText) === currentProblem.ans) btn.classList.add('correct'); });
+                ansBtns.forEach(btn => {
+                    if (parseInt(btn.innerText) === currentProblem.ans) btn.classList.add('correct');
+                });
                 wrongAnswer();
             }
             ansBtns.forEach(btn => btn.disabled = true);
         }
-        function wrongAnswer() { lives--; playBeep(200, 0.3, 'sawtooth'); updateUI(); if (lives <= 0) endGame(); else setTimeout(newQuestion, 800); }
-        function updateUI() { scoreEl.innerText = score; livesEl.innerText = '❤️'.repeat(lives); }
-        function endGame() { gameActive = false; clearInterval(timerInterval); playBeep(150, 0.5, 'square'); const key = 'hiScore_' + grade; const hi = localStorage.getItem(key) || 0; if (score > hi) localStorage.setItem(key, score); document.getElementById('screen-result').classList.remove('hidden'); document.getElementById('res-score').innerText = score; }
+
+        function wrongAnswer() {
+            lives--;
+            playBeep(200, 0.3, 'sawtooth');
+            updateUI();
+            if (lives <= 0) endGame();
+            else setTimeout(newQuestion, 800);
+        }
+
+        function updateUI() {
+            scoreEl.innerText = score;
+            livesEl.innerText = '❤️'.repeat(lives);
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(timerInterval);
+            playBeep(150, 0.5, 'square');
+            const key = 'hiScore_' + grade;
+            const hi = localStorage.getItem(key) || 0;
+            if (score > hi) localStorage.setItem(key, score);
+            document.getElementById('screen-result').classList.remove('hidden');
+            document.getElementById('res-score').innerText = score;
+            let stars = "⭐";
+            let msg = "Ayo belajar lagi!";
+            if (score >= 100) { stars = "⭐⭐⭐"; msg = "Luar Biasa! Kamu jenius!"; }
+            else if (score >= 50) { stars = "⭐⭐"; msg = "Hebat! Pertahankan!"; }
+            document.getElementById('res-stars').innerText = stars;
+            document.getElementById('res-msg').innerText = msg;
+        }
+
         function gameLoop() {
             if (!gameActive) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             meteor.y += meteor.speed;
+
             // Draw Meteor (Rocky Visual)
-            ctx.save(); ctx.translate(meteor.x, meteor.y);
-            ctx.fillStyle = '#6B7280'; ctx.beginPath();
-            meteor.shape.forEach((rMul, i) => { let a = (i/meteor.shape.length)*Math.PI*2; let r = 45 * rMul; ctx.lineTo(r*Math.cos(a), r*Math.sin(a)); });
-            ctx.closePath(); ctx.fill(); ctx.strokeStyle = '#374151'; ctx.lineWidth = 4; ctx.stroke();
+            ctx.save();
+            ctx.translate(meteor.x, meteor.y);
+            ctx.fillStyle = '#6B7280';
+            ctx.beginPath();
+            meteor.shape.forEach((rMul, i) => {
+                let a = (i/meteor.shape.length)*Math.PI*2;
+                let r = 45 * rMul;
+                if (i === 0) ctx.moveTo(r*Math.cos(a), r*Math.sin(a));
+                else ctx.lineTo(r*Math.cos(a), r*Math.sin(a));
+            });
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#374151';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
             // Craters
-            ctx.fillStyle = 'rgba(0,0,0,0.2)'; [{x:-15,y:-10,r:10}, {x:10,y:15,r:8}, {x:20,y:-5,r:6}].forEach(c => { ctx.beginPath(); ctx.arc(c.x, c.y, c.r, 0, Math.PI*2); ctx.fill(); });
-            ctx.fillStyle = 'white'; ctx.font = 'bold 22px Poppins'; ctx.textAlign = 'center'; ctx.fillText(currentProblem.text, 0, 5);
+            ctx.fillStyle = 'rgba(0,0,0,0.2)';
+            [{x:-15,y:-10,r:10}, {x:10,y:15,r:8}, {x:20,y:-5,r:6}].forEach(c => {
+                ctx.beginPath();
+                ctx.arc(c.x, c.y, c.r, 0, Math.PI*2);
+                ctx.fill();
+            });
+
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 22px Poppins';
+            ctx.textAlign = 'center';
+            ctx.fillText(currentProblem.text, 0, 7);
+
             // Timer Bar
-            const tw = (timer / 10) * 80; ctx.fillStyle = timer < 3 ? 'red' : '#FBBF24'; ctx.fillRect(-40, 60, tw, 8); ctx.strokeStyle = 'black'; ctx.strokeRect(-40, 60, 80, 8);
+            const tw = (timer / 10) * 80;
+            ctx.fillStyle = timer < 3 ? 'red' : '#FBBF24';
+            ctx.fillRect(-40, 60, tw, 8);
+            ctx.strokeStyle = 'black';
+            ctx.strokeRect(-40, 60, 80, 8);
             ctx.restore();
+
             // Lasers
             lasers.forEach((l, i) => {
-                l.y -= 15; ctx.strokeStyle = '#EF4444'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(l.x, l.y); ctx.lineTo(l.x, l.y - 20); ctx.stroke();
-                if (l.y < meteor.y + 40) { lasers.splice(i, 1); score += 10; updateUI(); newQuestion(); }
+                l.y -= 15;
+                ctx.strokeStyle = '#EF4444';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(l.x, l.y);
+                ctx.lineTo(l.x, l.y - 20);
+                ctx.stroke();
+                if (l.y < meteor.y + 40) {
+                    lasers.splice(i, 1);
+                    score += 10;
+                    updateUI();
+                    newQuestion();
+                }
             });
+
             // Rocket
-            ctx.font = '55px Arial'; ctx.textAlign = 'center'; ctx.fillText('🚀', canvas.width / 2, canvas.height - 30);
-            if (meteor.y > canvas.height - 80) wrongAnswer(); else animationId = requestAnimationFrame(gameLoop);
+            ctx.font = '55px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🚀', canvas.width / 2, canvas.height - 30);
+
+            if (meteor.y > canvas.height - 80) wrongAnswer();
+            else animationId = requestAnimationFrame(gameLoop);
         }
     </script>
 </body>
