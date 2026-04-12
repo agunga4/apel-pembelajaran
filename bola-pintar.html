@@ -12,16 +12,13 @@
   <style>
     :root {
       --orange: #ef6c00;
-      --orange-2: #ff9d35;
+      --orange-2: #ff9f39;
       --blue: #1565c0;
-      --sky: #dff4ff;
-      --court: #d99a48;
-      --court-2: #c9822d;
+      --ink: #09121c;
+      --white: #ffffff;
       --green: #22c55e;
       --red: #ef4444;
       --yellow: #ffd54f;
-      --ink: #09121c;
-      --white: #ffffff;
       --border: 3px solid #09121c;
     }
 
@@ -219,20 +216,45 @@
       transition: width 160ms linear;
     }
 
-    .hint {
+    .reveal {
       position: absolute;
       left: 50%;
-      bottom: calc(14px + env(safe-area-inset-bottom));
+      bottom: calc(16px + env(safe-area-inset-bottom));
       transform: translateX(-50%);
-      width: min(calc(100% - 24px), 430px);
-      padding: 10px 14px;
-      border-radius: 999px;
-      text-align: center;
-      background: rgba(9,18,28,0.82);
+      min-width: 210px;
+      max-width: calc(100% - 24px);
+      padding: 12px 16px;
+      border-radius: 18px;
+      background: rgba(9,18,28,0.88);
       color: white;
-      font-size: 0.78rem;
-      font-weight: 700;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+      text-align: center;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: opacity 140ms ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+    }
+
+    .reveal .reveal-top {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      opacity: 0.7;
+    }
+
+    .reveal .reveal-answer {
+      margin-top: 3px;
+      font-size: 1.45rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .reveal .reveal-status {
+      margin-top: 6px;
+      font-size: 0.92rem;
+      font-weight: 800;
     }
 
     .screen {
@@ -289,9 +311,6 @@
       font-family: inherit;
       font-weight: 800;
       cursor: pointer;
-    }
-
-    .mode-btn {
       background: white;
     }
 
@@ -306,7 +325,6 @@
 
     .sub-btn {
       margin-top: 10px;
-      background: white;
     }
 
     .score-final {
@@ -349,10 +367,6 @@
 
       .hud-top {
         width: min(94%, 420px);
-      }
-
-      .hint {
-        font-size: 0.72rem;
       }
     }
   </style>
@@ -401,8 +415,10 @@
           </div>
         </div>
 
-        <div class="hint" id="hintText">
-          Tarik bola dari bawah. Tenaga sudah diperkuat supaya tembakan lebih mudah sampai.
+        <div class="reveal" id="revealBox">
+          <div class="reveal-top">HASIL RING</div>
+          <div class="reveal-answer" id="revealAnswer">37</div>
+          <div class="reveal-status" id="revealStatus">Benar</div>
         </div>
       </div>
 
@@ -410,8 +426,7 @@
         <div class="panel">
           <h2>BOLA PINTAR</h2>
           <p>
-            Versi ini dibetulkan dari masalah sebelumnya: ring lebih rendah, launcher lebih tinggi,
-            HUD tidak menutup target, dan power tembakan dibuat lebih kuat.
+            Tembakkan bola ke salah satu ring. Jawaban baru dibuka setelah bola masuk.
           </p>
 
           <div class="mode-grid">
@@ -455,7 +470,10 @@
     const timerVal = document.getElementById('timerVal');
     const hiVal = document.getElementById('hiVal');
     const questionText = document.getElementById('questionText');
-    const hintText = document.getElementById('hintText');
+
+    const revealBox = document.getElementById('revealBox');
+    const revealAnswer = document.getElementById('revealAnswer');
+    const revealStatus = document.getElementById('revealStatus');
 
     const menuScreen = document.getElementById('menuScreen');
     const overScreen = document.getElementById('overScreen');
@@ -472,6 +490,7 @@
     let animationId = null;
     let gameRunning = false;
     let lastTime = 0;
+    let revealTimeout = null;
 
     let score = 0;
     let lives = 3;
@@ -489,7 +508,6 @@
 
     let pointerPressed = false;
     let aiming = false;
-
     let audioCtx = null;
 
     const world = {
@@ -567,7 +585,7 @@
 
     function getHighScore() {
       try {
-        const v = parseInt(localStorage.getItem('bolaPintarArcadeHigh') || '0', 10);
+        const v = parseInt(localStorage.getItem('bolaPintarBlindHoopHigh') || '0', 10);
         return Number.isNaN(v) ? 0 : v;
       } catch (e) {
         return 0;
@@ -576,7 +594,7 @@
 
     function setHighScore(v) {
       try {
-        localStorage.setItem('bolaPintarArcadeHigh', String(v));
+        localStorage.setItem('bolaPintarBlindHoopHigh', String(v));
       } catch (e) {}
     }
 
@@ -621,6 +639,22 @@
     modeButtons.forEach(btn => {
       btn.addEventListener('click', () => setMode(btn.dataset.mode));
     });
+
+    function hideReveal() {
+      revealBox.classList.remove('show');
+    }
+
+    function showReveal(answer, correct) {
+      clearTimeout(revealTimeout);
+      revealAnswer.textContent = answer;
+      revealStatus.textContent = correct ? 'BENAR' : 'SALAH';
+      revealStatus.style.color = correct ? '#86efac' : '#fca5a5';
+      revealBox.classList.add('show');
+
+      revealTimeout = setTimeout(() => {
+        revealBox.classList.remove('show');
+      }, 850);
+    }
 
     function generateProblem() {
       let mode = selectedMode;
@@ -671,11 +705,12 @@
         x: xs[i],
         y: hoopY + (i === 1 ? -4 : 8),
         rimR: clamp(world.width * 0.08, 32, 40),
-        value,
+        hiddenValue: value,
         isCorrect: value === currentProblem.answer,
         side: i === 0 ? 'left' : i === 1 ? 'center' : 'right',
         boardW: 16,
-        boardH: 88
+        boardH: 88,
+        flash: null
       }));
     }
 
@@ -688,11 +723,13 @@
       shot.trail = [];
       shot.x = launcher.x;
       shot.y = launcher.y;
+      hideReveal();
     }
 
     function startGame() {
       ensureAudio();
       cancelAnimationFrame(animationId);
+      clearTimeout(revealTimeout);
 
       score = 0;
       lives = 3;
@@ -710,7 +747,6 @@
       resetRoundState();
       updateHUD();
 
-      hintText.textContent = 'Sekarang ring lebih rendah dan power tembakan lebih kuat.';
       menuScreen.classList.add('hidden');
       overScreen.classList.add('hidden');
 
@@ -764,9 +800,10 @@
       });
     }
 
-    function registerCorrect(perfect) {
+    function registerCorrect(hoop, perfect) {
       roundResolved = true;
       shot.active = false;
+      hoop.flash = { color: '#22c55e', timer: 0.35 };
 
       let gain = 10 * combo;
       if (perfect) gain += 10;
@@ -778,38 +815,45 @@
       if (perfect) perfectSwish++;
 
       addParticles(shot.x, shot.y, perfect ? '#fde047' : '#22c55e', perfect ? 24 : 18);
-      addPopup(perfect ? `SWISH! +${gain}` : `MASUK! +${gain}`, shot.x, shot.y - 16, perfect ? '#fde047' : '#bbf7d0');
+      addPopup(perfect ? `SWISH! +${gain}` : `+${gainedOr(gain)}`, shot.x, shot.y - 16, perfect ? '#fde047' : '#bbf7d0');
+      showReveal(hoop.hiddenValue, true);
       scoreSound(perfect);
-
-      hintText.textContent = perfect
-        ? 'Perfect swish! Tembakanmu pas sekali.'
-        : 'Masuk! Sekarang lebih enak kan dimainkan.';
       updateHUD();
 
       setTimeout(() => {
         if (gameRunning) nextRound();
-      }, 700);
+      }, 900);
     }
 
-    function registerWrong(reason = 'MISS!') {
+    function gainedOr(v) {
+      return v;
+    }
+
+    function registerWrong(hoop = null, reason = 'MISS!') {
       roundResolved = true;
       shot.active = false;
       lives--;
       combo = 1;
       comboChain = 0;
 
+      if (hoop) {
+        hoop.flash = { color: '#ef4444', timer: 0.35 };
+        showReveal(hoop.hiddenValue, false);
+      } else {
+        hideReveal();
+      }
+
       addParticles(shot.x, shot.y, '#ef4444', 16);
       addPopup(reason, shot.x, shot.y - 14, '#fecaca');
       missSound();
-      hintText.textContent = 'Kalau masih kurang, tinggal tarik sedikit lebih panjang lagi.';
       updateHUD();
 
       if (lives <= 0) {
-        setTimeout(gameOver, 540);
+        setTimeout(gameOver, 620);
       } else {
         setTimeout(() => {
           if (gameRunning) nextRound();
-        }, 700);
+        }, 900);
       }
     }
 
@@ -866,6 +910,13 @@
 
       ctx.save();
 
+      if (hoop.flash) {
+        ctx.beginPath();
+        ctx.arc(x, y + 10, hoop.rimR + 20, 0, Math.PI * 2);
+        ctx.fillStyle = hoop.flash.color + '33';
+        ctx.fill();
+      }
+
       if (hoop.side === 'right') {
         ctx.fillStyle = 'rgba(0,0,0,0.16)';
         ctx.fillRect(x - hoop.rimR - 32, y - 44, hoop.boardW, hoop.boardH);
@@ -907,18 +958,18 @@
       }
 
       ctx.beginPath();
-      ctx.roundRect(x - 40, y - 96, 80, 40, 14);
-      ctx.fillStyle = hoop.isCorrect ? '#22c55e' : '#ffffff';
+      ctx.roundRect(x - 38, y - 95, 76, 36, 14);
+      ctx.fillStyle = 'rgba(255,255,255,0.98)';
       ctx.fill();
       ctx.strokeStyle = '#09121c';
       ctx.lineWidth = 3;
       ctx.stroke();
 
-      ctx.fillStyle = hoop.isCorrect ? '#ffffff' : '#09121c';
-      ctx.font = '800 19px "Plus Jakarta Sans"';
+      ctx.fillStyle = '#09121c';
+      ctx.font = '800 16px "Plus Jakarta Sans"';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(String(hoop.value), x, y - 76);
+      ctx.fillText('?', x, y - 76);
 
       ctx.restore();
     }
@@ -1102,16 +1153,16 @@
           shot.scored = true;
           if (hoop.isCorrect) {
             const perfect = Math.abs(shot.x - hoop.x) < hoop.rimR * 0.34 && Math.abs(shot.vx) < 2.1;
-            registerCorrect(perfect);
+            registerCorrect(hoop, perfect);
           } else {
-            registerWrong('SALAH RING!');
+            registerWrong(hoop, 'SALAH');
           }
           return;
         }
       }
 
       if (shot.y > world.floorY + 10) {
-        registerWrong('MISS!');
+        registerWrong(null, 'MISS!');
       }
     }
 
@@ -1122,7 +1173,7 @@
         shotClock -= dt;
         if (shotClock <= 0) {
           shotClock = 0;
-          registerWrong('WAKTU HABIS!');
+          registerWrong(null, 'WAKTU HABIS!');
         }
       }
 
@@ -1138,6 +1189,13 @@
       popups.forEach(p => {
         p.y += p.vy;
         p.life *= 0.97;
+      });
+
+      hoops.forEach(h => {
+        if (h.flash) {
+          h.flash.timer -= dt;
+          if (h.flash.timer <= 0) h.flash = null;
+        }
       });
 
       updateShot(dt);
@@ -1223,7 +1281,6 @@
       shot.trail = [];
 
       beep(300, 0.08, 'square', 0.05);
-      hintText.textContent = 'Power sudah dinaikkan. Tarik sedang pun sekarang harusnya bisa sampai.';
     }
 
     function onEnd() {
@@ -1260,6 +1317,8 @@
       menuScreen.classList.remove('hidden');
       gameRunning = false;
       cancelAnimationFrame(animationId);
+      clearTimeout(revealTimeout);
+      hideReveal();
     });
 
     currentProblem = generateProblem();
