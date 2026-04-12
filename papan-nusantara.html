@@ -1,162 +1,243 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>PAPAN NUSANTARA - APeL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --batik-brown: #6D4C1F;
             --sky-blue: #87CEEB;
+            --cream: #FFF8E7;
             --white: #ffffff;
             --black: #000000;
             --red: #FF4D4D;
             --blue: #4D79FF;
+            --green: #22C55E;
+            --gold: #FBBF24;
+            --purple: #8B5CF6;
+            --danger: #EF4444;
             --border: 4px solid #000000;
             --shadow: 6px 6px 0px #000000;
+            --shadow-sm: 4px 4px 0px #000000;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html, body {
+            width: 100%;
+            min-height: 100%;
+        }
+
         body {
-            background-color: var(--sky-blue);
+            background: linear-gradient(to bottom, #a5ddf6, #87CEEB);
             font-family: 'Plus Jakarta Sans', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            color: var(--black);
             min-height: 100vh;
-            padding: 20px;
+            padding: 16px;
             overflow-x: hidden;
         }
 
-        /* Batik Background Pattern */
         .batik-bg {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(var(--batik-brown) 1px, transparent 1px);
-            background-size: 20px 20px;
-            opacity: 0.1;
+            inset: 0;
+            background-image:
+                radial-gradient(rgba(109, 76, 31, 0.18) 1.2px, transparent 1.2px),
+                radial-gradient(rgba(109, 76, 31, 0.12) 1px, transparent 1px);
+            background-size: 22px 22px, 38px 38px;
+            background-position: 0 0, 10px 10px;
+            opacity: 0.28;
             z-index: -1;
+            pointer-events: none;
+        }
+
+        .app {
+            max-width: 1220px;
+            margin: 0 auto;
         }
 
         header {
             text-align: center;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 600px;
-        }
-
-        h1 {
-            font-family: 'Lobster', cursive;
-            font-size: 3rem;
-            color: var(--batik-brown);
-            text-shadow: 3px 3px 0px #fff;
-            -webkit-text-stroke: 1px var(--black);
-            margin-bottom: 10px;
+            margin-bottom: 18px;
         }
 
         .back-btn {
             background: var(--white);
             border: var(--border);
-            padding: 8px 16px;
-            font-weight: bold;
+            padding: 10px 16px;
+            font-weight: 800;
             cursor: pointer;
-            box-shadow: 4px 4px 0px var(--black);
+            box-shadow: var(--shadow-sm);
             text-decoration: none;
             color: var(--black);
             display: inline-block;
             margin-bottom: 10px;
             transition: 0.1s;
+            border-radius: 16px;
         }
 
-        .back-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--black); }
+        .back-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--black);
+        }
+
+        h1 {
+            font-family: 'Lobster', cursive;
+            font-size: clamp(2.2rem, 6vw, 3.3rem);
+            color: var(--batik-brown);
+            text-shadow: 3px 3px 0px #fff;
+            -webkit-text-stroke: 1px var(--black);
+            margin-bottom: 6px;
+        }
+
+        .subhead {
+            font-weight: 700;
+            color: #3f2a13;
+            opacity: 0.9;
+        }
 
         #game-container {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: minmax(300px, 700px) minmax(300px, 420px);
             gap: 20px;
-            justify-content: center;
-            max-width: 1200px;
-            width: 100%;
+            align-items: start;
         }
 
-        /* Board Styling */
-        .board-wrapper {
-            position: relative;
+        .board-wrapper,
+        .card,
+        .album-card {
             background: var(--white);
             border: var(--border);
             box-shadow: var(--shadow);
-            padding: 10px;
+            border-radius: 24px;
+        }
+
+        .board-wrapper {
+            padding: 12px;
         }
 
         canvas {
             background: #fdf5e6;
             display: block;
-            max-width: 100%;
+            width: 100%;
             height: auto;
+            border-radius: 16px;
         }
 
-        /* UI Controls */
         .controls {
-            flex: 1;
-            min-width: 300px;
-            max-width: 400px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
         }
 
         .card {
-            background: var(--white);
+            padding: 16px;
+        }
+
+        .top-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .mini-stat {
+            background: #fff8ef;
             border: var(--border);
-            padding: 20px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-sm);
+            border-radius: 16px;
+            padding: 10px 8px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 0.8rem;
+        }
+
+        .mini-stat span {
+            display: block;
+            margin-top: 4px;
+            font-size: 1rem;
+        }
+
+        .mode-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .pill-btn, .btn {
+            background: var(--sky-blue);
+            border: var(--border);
+            padding: 12px 16px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            border-radius: 16px;
+            transition: 0.1s;
+            width: 100%;
+        }
+
+        .pill-btn.active {
+            background: var(--gold);
+        }
+
+        .pill-btn:active, .btn:active, .dice:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px var(--black);
         }
 
         .player-info {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 10px;
         }
 
         .p-box {
-            padding: 10px;
+            flex: 1;
+            padding: 12px 10px;
             border: var(--border);
-            width: 45%;
             text-align: center;
-            font-weight: bold;
-            transition: 0.3s;
+            font-weight: 800;
+            transition: 0.2s;
+            border-radius: 16px;
+            background: #fafafa;
+            box-shadow: var(--shadow-sm);
         }
 
         .p-box.active {
-            transform: scale(1.1);
-            background: yellow;
+            transform: scale(1.03);
+            background: #fff7c7;
         }
 
         #dice-area {
             text-align: center;
         }
 
+        .turn-text {
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
         .dice {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             background: white;
             border: var(--border);
-            margin: 10px auto;
+            margin: 12px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-            box-shadow: 6px 6px 0px var(--black);
+            font-size: 2.2rem;
+            font-weight: 800;
+            box-shadow: var(--shadow);
             cursor: pointer;
             transition: 0.1s;
+            border-radius: 20px;
         }
 
-        .dice:active { transform: scale(0.9); }
-
-        .dice.rolling { animation: shake 0.2s infinite; }
+        .dice.rolling {
+            animation: shake 0.18s infinite;
+        }
 
         @keyframes shake {
             0% { transform: rotate(0deg); }
@@ -165,153 +246,356 @@
             100% { transform: rotate(0deg); }
         }
 
-        /* Trivia Modal */
+        .helper-text {
+            margin-top: 8px;
+            font-size: 0.92rem;
+            color: #4a4a4a;
+        }
+
+        #log {
+            font-size: 0.92rem;
+            color: #333;
+            max-height: 160px;
+            overflow-y: auto;
+            margin-top: 10px;
+            line-height: 1.45;
+        }
+
+        .zone-legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .zone-badge {
+            padding: 10px;
+            border: 3px solid #000;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 0.82rem;
+            text-align: center;
+        }
+
+        .album-card {
+            padding: 16px;
+        }
+
+        .album-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .album-item {
+            min-height: 112px;
+            border: 3px solid #000;
+            border-radius: 16px;
+            padding: 10px;
+            background: #fff8ef;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .album-item.locked {
+            background: repeating-linear-gradient(
+                45deg,
+                #e8e8e8,
+                #e8e8e8 10px,
+                #dcdcdc 10px,
+                #dcdcdc 20px
+            );
+            color: #555;
+        }
+
+        .album-item h4 {
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .album-item p {
+            font-size: 0.82rem;
+            line-height: 1.35;
+        }
+
         #modal {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            inset: 0;
             background: rgba(0,0,0,0.8);
-            z-index: 100;
+            z-index: 200;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 18px;
         }
 
         .modal-content {
             background: var(--white);
             border: var(--border);
             box-shadow: 10px 10px 0px var(--black);
-            max-width: 500px;
+            max-width: 560px;
             width: 100%;
-            padding: 30px;
+            padding: 24px;
             text-align: center;
+            border-radius: 24px;
         }
 
-        .btn {
-            background: var(--sky-blue);
-            border: var(--border);
-            padding: 10px 20px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 4px 4px 0px var(--black);
-            margin: 10px;
-            display: block;
-            width: 100%;
+        .modal-title {
+            font-family: 'Lobster', cursive;
+            font-size: 2rem;
+            color: var(--batik-brown);
+            margin-bottom: 10px;
         }
 
-        .btn:hover { background: #6fbada; }
+        .question-zone {
+            display: inline-block;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            border: 3px solid #000;
+            border-radius: 999px;
+            font-weight: 800;
+            background: #fff7c7;
+        }
 
         .btn-opt {
             text-align: left;
             margin-bottom: 10px;
+            background: #fff;
         }
 
-        #log {
-            font-size: 0.9rem;
-            color: #333;
-            max-height: 100px;
-            overflow-y: auto;
-            margin-top: 10px;
+        .btn-opt:hover {
+            background: #eaf8ff;
+        }
+
+        .result-note {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 14px;
+            border: 3px solid #000;
+            font-weight: 800;
+        }
+
+        .ok { background: #dcfce7; }
+        .bad { background: #fee2e2; }
+        .winbox {
+            background: #fef3c7;
+        }
+
+        @media (max-width: 980px) {
+            #game-container {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 600px) {
-            h1 { font-size: 2rem; }
-            .controls { min-width: 100%; }
+            body { padding: 10px; }
+            .top-stats { grid-template-columns: 1fr 1fr; }
+            .mode-row { grid-template-columns: 1fr; }
+            .player-info { flex-direction: column; }
+            .album-grid { grid-template-columns: 1fr; }
+            .zone-legend { grid-template-columns: 1fr; }
+            .modal-content { padding: 18px; }
         }
     </style>
 </head>
 <body>
-
     <div class="batik-bg"></div>
 
-    <header>
-        <a href="https://apel-pembelajaran.vercel.app/#games" class="back-btn">← KEMBALI</a>
-        <h1>Papan Nusantara</h1>
-    </header>
+    <div class="app">
+        <header>
+            <a href="https://apel-pembelajaran.vercel.app/#games" class="back-btn" target="_blank" rel="noopener noreferrer">← KEMBALI</a>
+            <h1>Papan Nusantara</h1>
+            <p class="subhead">Belajar budaya Indonesia sambil menjelajah papan permainan.</p>
+        </header>
 
-    <div id="game-container">
-        <div class="board-wrapper">
-            <canvas id="gameCanvas" width="600" height="600"></canvas>
-        </div>
-
-        <div class="controls">
-            <div class="card player-info">
-                <div id="p1-card" class="p-box active" style="border-color: var(--red);">PEMAIN 1 (MERAH)</div>
-                <div id="p2-card" class="p-box" style="border-color: var(--blue);">PEMAIN 2 (BIRU)</div>
+        <div id="game-container">
+            <div class="board-wrapper">
+                <canvas id="gameCanvas" width="700" height="700"></canvas>
             </div>
 
-            <div class="card" id="dice-area">
-                <p>GILIRAN: <span id="current-player-text">MERAH</span></p>
-                <div id="dice" class="dice">?</div>
-                <button class="btn" id="roll-btn">LEMPAR DADU</button>
-            </div>
+            <div class="controls">
+                <div class="card">
+                    <div class="top-stats">
+                        <div class="mini-stat">MODE<span id="mode-label">VERSUS</span></div>
+                        <div class="mini-stat">GILIRAN<span id="turn-label">MERAH</span></div>
+                        <div class="mini-stat">SALAH<span id="mistake-label">0</span></div>
+                        <div class="mini-stat">ALBUM<span id="album-label">0/5</span></div>
+                    </div>
+                </div>
 
-            <div class="card">
-                <strong>STATUS PERMAINAN:</strong>
-                <div id="log">Selamat datang di Papan Nusantara! Silakan lempar dadu untuk memulai.</div>
+                <div class="card">
+                    <strong style="display:block; margin-bottom:10px;">PILIH MODE</strong>
+                    <div class="mode-row">
+                        <button class="pill-btn active" id="mode-versus-btn">VERSUS</button>
+                        <button class="pill-btn" id="mode-coop-btn">KOOPERATIF</button>
+                    </div>
+                    <p class="helper-text">
+                        Versus: 2 pemain berlomba ke petak 100. Kooperatif: bermain bersama melawan batas 10 kesalahan.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="player-info">
+                        <div id="p1-card" class="p-box active" style="border-color: var(--red);">PEMAIN 1<br>MERAH</div>
+                        <div id="p2-card" class="p-box" style="border-color: var(--blue);">PEMAIN 2<br>BIRU</div>
+                    </div>
+                </div>
+
+                <div class="card" id="dice-area">
+                    <p class="turn-text">GILIRAN: <span id="current-player-text" style="color:#FF4D4D;">MERAH</span></p>
+                    <div id="dice" class="dice">?</div>
+                    <button class="btn" id="roll-btn">LEMPAR DADU</button>
+                    <p class="helper-text">Setelah mendarat, kamu akan menjawab satu trivia budaya sesuai zona papan.</p>
+                </div>
+
+                <div class="card">
+                    <strong>ZONA NUSANTARA</strong>
+                    <div class="zone-legend">
+                        <div class="zone-badge" style="background:#fde68a;">1-20 Sumatera</div>
+                        <div class="zone-badge" style="background:#fca5a5;">21-40 Jawa</div>
+                        <div class="zone-badge" style="background:#86efac;">41-60 Kalimantan</div>
+                        <div class="zone-badge" style="background:#93c5fd;">61-80 Sulawesi</div>
+                        <div class="zone-badge" style="background:#c4b5fd; grid-column:1/-1;">81-100 Bali, Nusa Tenggara, Maluku, Papua</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <strong>STATUS PERMAINAN</strong>
+                    <div id="log">Selamat datang di Papan Nusantara! Pilih mode dan lempar dadu untuk memulai.</div>
+                </div>
+
+                <div class="album-card">
+                    <strong>ALBUM NUSANTARA</strong>
+                    <div class="album-grid" id="album-grid"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal Trivia -->
     <div id="modal">
-        <div class="modal-content" id="modal-inner">
-            <!-- Content via JS -->
-        </div>
+        <div class="modal-content" id="modal-inner"></div>
     </div>
 
     <script>
-        // Audio Synthesis (No external files needed)
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const size = 10;
+        const tileSize = canvas.width / size;
+
+        const snakes = { 17: 7, 52: 29, 62: 44, 95: 75, 98: 79 };
+        const ladders = { 3: 21, 8: 30, 28: 46, 58: 77, 75: 86, 80: 94 };
+
+        const zoneDefs = [
+            { name: "Sumatera", start: 1, end: 20, color: "#fde68a" },
+            { name: "Jawa", start: 21, end: 40, color: "#fca5a5" },
+            { name: "Kalimantan", start: 41, end: 60, color: "#86efac" },
+            { name: "Sulawesi", start: 61, end: 80, color: "#93c5fd" },
+            { name: "Timur Indonesia", start: 81, end: 100, color: "#c4b5fd" }
+        ];
+
+        const albumMaster = [
+            { id: "sumatera", title: "Rumah Gadang", fact: "Rumah Gadang dari Sumatera Barat memiliki atap melengkung seperti tanduk kerbau." },
+            { id: "jawa", title: "Candi Borobudur", fact: "Borobudur di Jawa Tengah adalah salah satu candi Buddha terbesar di dunia." },
+            { id: "kalimantan", title: "Mandau", fact: "Mandau dikenal sebagai senjata tradisional suku Dayak di Kalimantan." },
+            { id: "sulawesi", title: "Rumah Tongkonan", fact: "Tongkonan dari Toraja terkenal dengan atap melengkung khas." },
+            { id: "timur", title: "Lagu Apuse", fact: "Apuse adalah lagu daerah yang sangat dikenal dari Papua." }
+        ];
+
+        const questionBank = {
+            Sumatera: [
+                { q: "Apa nama rumah adat dari Sumatera Barat?", a: ["Rumah Gadang", "Rumah Joglo", "Rumah Honai"], c: 0, album: "sumatera" },
+                { q: "Senjata tradisional khas Lampung adalah...", a: ["Badik", "Keris", "Payan"], c: 2, album: "sumatera" },
+                { q: "Tari Piring berasal dari...", a: ["Sumatera Barat", "Bengkulu", "Riau"], c: 0, album: "sumatera" }
+            ],
+            Jawa: [
+                { q: "Candi Borobudur terletak di provinsi...", a: ["Jawa Tengah", "Jawa Barat", "Banten"], c: 0, album: "jawa" },
+                { q: "Rumah adat Joglo identik dengan daerah...", a: ["Jawa", "Papua", "Maluku"], c: 0, album: "jawa" },
+                { q: "Kujang dikenal sebagai senjata tradisional dari...", a: ["Jawa Barat", "DIY", "Bali"], c: 0, album: "jawa" }
+            ],
+            Kalimantan: [
+                { q: "Senjata tradisional suku Dayak adalah...", a: ["Mandau", "Rencong", "Celurit"], c: 0, album: "kalimantan" },
+                { q: "Pulau Kalimantan terkenal dengan hutan...", a: ["Mangrove", "Hujan tropis", "Savana"], c: 1, album: "kalimantan" },
+                { q: "Suku Dayak berasal dari...", a: ["Jawa", "Kalimantan", "Papua"], c: 1, album: "kalimantan" }
+            ],
+            Sulawesi: [
+                { q: "Rumah adat Tongkonan berasal dari...", a: ["Bugis", "Toraja", "Minahasa"], c: 1, album: "sulawesi" },
+                { q: "Kapal Pinisi identik dengan masyarakat...", a: ["Bugis-Makassar", "Batak", "Sasak"], c: 0, album: "sulawesi" },
+                { q: "Pulau Sulawesi memiliki bentuk yang...", a: ["Bulat", "Bercabang", "Segitiga"], c: 1, album: "sulawesi" }
+            ],
+            "Timur Indonesia": [
+                { q: "Lagu daerah 'Apuse' berasal dari...", a: ["Papua", "Maluku", "NTB"], c: 0, album: "timur" },
+                { q: "Tari Kecak berasal dari...", a: ["Bali", "Papua", "Maluku"], c: 0, album: "timur" },
+                { q: "Rumah Honai dikenal berasal dari...", a: ["Papua", "NTT", "Bali"], c: 0, album: "timur" }
+            ]
+        };
+
+        let usedQuestions = {
+            Sumatera: [],
+            Jawa: [],
+            Kalimantan: [],
+            Sulawesi: [],
+            "Timur Indonesia": []
+        };
+
+        let players = [
+            { id: 1, pos: 1, color: '#FF4D4D', visualPos: 1, name: 'MERAH' },
+            { id: 2, pos: 1, color: '#4D79FF', visualPos: 1, name: 'BIRU' }
+        ];
+
+        let currentPlayer = 0;
+        let gameState = 'idle';
+        let gameMode = 'versus';
+        let mistakes = 0;
+        let maxMistakes = 10;
+        let unlockedAlbum = new Set();
+
+        let audioCtx = null;
+        function ensureAudio() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+            } catch (e) {}
+        }
+
         function playSound(freq, type, duration) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
+            try {
+                ensureAudio();
+                if (!audioCtx) return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
         }
 
         const sound = {
             roll: () => playSound(440, 'square', 0.1),
             ladder: () => { playSound(523, 'sine', 0.2); setTimeout(() => playSound(659, 'sine', 0.2), 100); },
             snake: () => { playSound(300, 'sawtooth', 0.2); setTimeout(() => playSound(200, 'sawtooth', 0.2), 100); },
-            win: () => { [523, 659, 783, 1046].forEach((f, i) => setTimeout(() => playSound(f, 'sine', 0.4), i * 150)); }
+            correct: () => { playSound(700, 'sine', 0.15); setTimeout(() => playSound(880, 'sine', 0.15), 80); },
+            wrong: () => playSound(220, 'sawtooth', 0.25),
+            win: () => { [523, 659, 783, 1046].forEach((f, i) => setTimeout(() => playSound(f, 'sine', 0.35), i * 140)); }
         };
 
-        // Configuration
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const size = 10;
-        const tileSize = canvas.width / size;
+        function log(msg) {
+            const l = document.getElementById('log');
+            l.innerHTML = `> ${msg}<br>${l.innerHTML}`;
+        }
 
-        let players = [
-            { id: 1, pos: 1, color: '#FF4D4D', visualPos: 1 },
-            { id: 2, pos: 1, color: '#4D79FF', visualPos: 1 }
-        ];
-        let currentPlayer = 0;
-        let isMoving = false;
+        function getZone(pos) {
+            return zoneDefs.find(z => pos >= z.start && pos <= z.end) || zoneDefs[0];
+        }
 
-        const snakes = { 17: 7, 52: 29, 62: 19, 95: 75, 98: 79 };
-        const ladders = { 3: 21, 8: 30, 28: 84, 58: 77, 75: 86, 80: 100 };
-        const triviaSpots = [15, 35, 55, 72, 88];
-
-        const questions = [
-            { q: "Apa nama rumah adat dari Sumatera Barat?", a: ["Rumah Gadang", "Rumah Joglo", "Rumah Honai"], c: 0 },
-            { q: "Senjata tradisional khas suku Dayak adalah...", a: ["Keris", "Mandau", "Kujang"], c: 1 },
-            { q: "Tari Kecak berasal dari provinsi...", a: ["Jawa Timur", "Bali", "Papua"], c: 1 },
-            { q: "Lagu daerah 'Apuse' berasal dari daerah...", a: ["Aceh", "Papua", "Maluku"], c: 1 },
-            { q: "Candi Borobudur terletak di provinsi...", a: ["DI Yogyakarta", "Jawa Tengah", "Jawa Barat"], c: 1 }
-        ];
-
-        // Draw Logic
         function getCoords(pos) {
-            let index = pos - 1;
-            let row = Math.floor(index / 10);
+            const index = pos - 1;
+            const row = Math.floor(index / 10);
             let col = index % 10;
             if (row % 2 !== 0) col = 9 - col;
             return {
@@ -320,208 +604,393 @@
             };
         }
 
+        function drawSnakePath(from, to) {
+            const midX = (from.x + to.x) / 2;
+            const midY = (from.y + to.y) / 2;
+            ctx.beginPath();
+            ctx.moveTo(from.x, from.y);
+            ctx.quadraticCurveTo(midX + 30, midY - 30, to.x, to.y);
+            ctx.stroke();
+        }
+
+        function drawLadderPath(from, to) {
+            const dx = to.x - from.x;
+            const dy = to.y - from.y;
+            const len = Math.hypot(dx, dy);
+            const nx = -dy / len * 8;
+            const ny = dx / len * 8;
+
+            ctx.beginPath();
+            ctx.moveTo(from.x + nx, from.y + ny);
+            ctx.lineTo(to.x + nx, to.y + ny);
+            ctx.moveTo(from.x - nx, from.y - ny);
+            ctx.lineTo(to.x - nx, to.y - ny);
+
+            const rungs = 5;
+            for (let i = 1; i < rungs; i++) {
+                const t = i / rungs;
+                const rx = from.x + dx * t;
+                const ry = from.y + dy * t;
+                ctx.moveTo(rx + nx, ry + ny);
+                ctx.lineTo(rx - nx, ry - ny);
+            }
+            ctx.stroke();
+        }
+
         function drawBoard() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw Tiles
             for (let i = 0; i < 100; i++) {
-                let row = Math.floor(i / 10);
-                let col = i % 10;
-                let displayCol = (row % 2 === 0) ? col : 9 - col;
-                let x = displayCol * tileSize;
-                let y = (9 - row) * tileSize;
-                let num = i + 1;
+                const row = Math.floor(i / 10);
+                const col = i % 10;
+                const displayCol = (row % 2 === 0) ? col : 9 - col;
+                const x = displayCol * tileSize;
+                const y = (9 - row) * tileSize;
+                const num = i + 1;
+                const zone = getZone(num);
 
-                // Batik style background
-                ctx.fillStyle = (i % 2 === 0) ? "#fdf5e6" : "#faebd7";
+                ctx.fillStyle = zone.color;
                 ctx.fillRect(x, y, tileSize, tileSize);
-                
-                // Border
-                ctx.strokeStyle = "#000";
-                ctx.lineWidth = 1;
-                ctx.strokeRect(x, y, tileSize, tileSize);
 
-                // Highlight Special
-                if (triviaSpots.includes(num)) {
-                    ctx.fillStyle = "rgba(255, 215, 0, 0.3)";
+                if (i % 2 === 0) {
+                    ctx.fillStyle = "rgba(255,255,255,0.15)";
                     ctx.fillRect(x, y, tileSize, tileSize);
-                    ctx.fillStyle = "#000";
-                    ctx.font = "bold 10px Arial";
-                    ctx.fillText("TRIVIA", x + 5, y + 15);
                 }
 
-                ctx.fillStyle = "rgba(109, 76, 31, 0.2)";
+                ctx.strokeStyle = "#000";
+                ctx.lineWidth = 1.5;
+                ctx.strokeRect(x, y, tileSize, tileSize);
+
+                if (num % 5 === 0) {
+                    ctx.fillStyle = "rgba(255,255,255,0.22)";
+                    ctx.fillRect(x + 6, y + 6, tileSize - 12, 18);
+                }
+
+                ctx.fillStyle = "rgba(0,0,0,0.72)";
                 ctx.font = "bold 14px Arial";
-                ctx.fillText(num, x + 5, y + tileSize - 5);
+                ctx.fillText(num, x + 6, y + tileSize - 6);
+
+                if (num === players[0].pos || num === players[1].pos) {
+                    ctx.strokeStyle = "rgba(0,0,0,0.25)";
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(x + 3, y + 3, tileSize - 6, tileSize - 6);
+                }
             }
 
-            // Draw Snakes and Ladders
             ctx.lineWidth = 6;
             ctx.lineCap = "round";
 
-            // Ladders (Green)
             Object.keys(ladders).forEach(start => {
-                let from = getCoords(parseInt(start));
-                let to = getCoords(ladders[start]);
-                ctx.strokeStyle = "#2ecc71";
-                drawArrow(from.x, from.y, to.x, to.y);
+                const from = getCoords(parseInt(start));
+                const to = getCoords(ladders[start]);
+                ctx.strokeStyle = "#16a34a";
+                drawLadderPath(from, to);
             });
 
-            // Snakes (Red)
             Object.keys(snakes).forEach(start => {
-                let from = getCoords(parseInt(start));
-                let to = getCoords(snakes[start]);
-                ctx.strokeStyle = "#e74c3c";
-                drawArrow(from.x, from.y, to.x, to.y);
+                const from = getCoords(parseInt(start));
+                const to = getCoords(snakes[start]);
+                ctx.strokeStyle = "#dc2626";
+                drawSnakePath(from, to);
             });
 
-            // Draw Players
             players.forEach((p, idx) => {
-                let pos = getCoords(p.visualPos);
+                const pos = getCoords(p.visualPos);
                 ctx.beginPath();
-                ctx.arc(pos.x + (idx * 5 - 5), pos.y, 15, 0, Math.PI * 2);
+                ctx.arc(pos.x + (idx * 10 - 5), pos.y, 16, 0, Math.PI * 2);
                 ctx.fillStyle = p.color;
                 ctx.fill();
                 ctx.strokeStyle = "#000";
                 ctx.lineWidth = 3;
                 ctx.stroke();
+
+                ctx.fillStyle = "#fff";
+                ctx.font = "bold 14px Arial";
+                ctx.textAlign = "center";
+                ctx.fillText(String(p.id), pos.x + (idx * 10 - 5), pos.y + 5);
+                ctx.textAlign = "start";
             });
         }
 
-        function drawArrow(fromx, fromy, tox, toy) {
-            ctx.beginPath();
-            ctx.moveTo(fromx, fromy);
-            ctx.lineTo(tox, toy);
-            ctx.stroke();
-        }
-
-        // Game Logic
         async function movePlayer(playerIdx, targetPos) {
-            isMoving = true;
-            let p = players[playerIdx];
-            
-            // Step-by-step movement
+            gameState = 'moving';
+            const p = players[playerIdx];
+
             while (p.visualPos !== targetPos) {
                 if (p.visualPos < targetPos) p.visualPos++;
                 else p.visualPos--;
-                
                 drawBoard();
-                await new Promise(r => setTimeout(r, 200));
+                await new Promise(r => setTimeout(r, 170));
             }
 
             p.pos = targetPos;
-            isMoving = false;
+            drawBoard();
+            gameState = 'idle';
         }
 
-        async function handleTurn() {
-            if (isMoving) return;
-            
-            const btn = document.getElementById('roll-btn');
-            const diceDiv = document.getElementById('dice');
-            btn.disabled = true;
-            
-            // Roll Animation
-            sound.roll();
-            diceDiv.classList.add('rolling');
-            let roll = 0;
-            for(let i=0; i<10; i++) {
-                roll = Math.floor(Math.random() * 6) + 1;
-                diceDiv.textContent = roll;
-                await new Promise(r => setTimeout(r, 50));
-            }
-            diceDiv.classList.remove('rolling');
+        async function applyBoardEffects(playerIdx) {
+            const p = players[playerIdx];
+            let chained = true;
 
-            let p = players[currentPlayer];
-            let newPos = p.pos + roll;
+            while (chained) {
+                chained = false;
 
-            if (newPos > 100) {
-                log(`Pemain ${currentPlayer + 1} butuh angka ${100 - p.pos} untuk menang.`);
-            } else {
-                await movePlayer(currentPlayer, newPos);
-                
-                // Check Special Tiles
                 if (ladders[p.pos]) {
-                    log(`MANTAP! Naik tangga ke ${ladders[p.pos]}`);
+                    log(`${p.name} naik tangga ke ${ladders[p.pos]}.`);
                     sound.ladder();
-                    await movePlayer(currentPlayer, ladders[p.pos]);
+                    await movePlayer(playerIdx, ladders[p.pos]);
+                    chained = true;
                 } else if (snakes[p.pos]) {
-                    log(`WADUH! Turun ular ke ${snakes[p.pos]}`);
+                    log(`${p.name} turun ular ke ${snakes[p.pos]}.`);
                     sound.snake();
-                    await movePlayer(currentPlayer, snakes[p.pos]);
-                } else if (triviaSpots.includes(p.pos)) {
-                    await showTrivia();
+                    await movePlayer(playerIdx, snakes[p.pos]);
+                    chained = true;
                 }
             }
+        }
 
-            if (p.pos === 100) {
-                sound.win();
-                alert(`SELAMAT! Pemain ${currentPlayer + 1} Menang!`);
-                location.reload();
-                return;
+        function getQuestionByZone(zoneName) {
+            const pool = questionBank[zoneName];
+            if (!pool || pool.length === 0) return null;
+
+            if (usedQuestions[zoneName].length >= pool.length) {
+                usedQuestions[zoneName] = [];
             }
 
-            // Switch turn
-            currentPlayer = currentPlayer === 0 ? 1 : 0;
-            updateUI();
-            btn.disabled = false;
+            let idx;
+            do {
+                idx = Math.floor(Math.random() * pool.length);
+            } while (usedQuestions[zoneName].includes(idx) && usedQuestions[zoneName].length < pool.length);
+
+            usedQuestions[zoneName].push(idx);
+            return pool[idx];
+        }
+
+        function updateAlbum() {
+            const grid = document.getElementById('album-grid');
+            grid.innerHTML = '';
+
+            albumMaster.forEach(item => {
+                const unlocked = unlockedAlbum.has(item.id);
+                const el = document.createElement('div');
+                el.className = 'album-item' + (unlocked ? '' : ' locked');
+                el.innerHTML = unlocked
+                    ? `<h4>${item.title}</h4><p>${item.fact}</p>`
+                    : `<h4>???</h4><p>Kartu budaya ini akan terbuka saat kamu menjawab trivia dengan benar.</p>`;
+                grid.appendChild(el);
+            });
+
+            document.getElementById('album-label').textContent = `${unlockedAlbum.size}/5`;
         }
 
         function updateUI() {
-            document.getElementById('p1-card').classList.toggle('active', currentPlayer === 0);
-            document.getElementById('p2-card').classList.toggle('active', currentPlayer === 1);
-            document.getElementById('current-player-text').textContent = currentPlayer === 0 ? "MERAH" : "BIRU";
+            const isVersus = gameMode === 'versus';
+            document.getElementById('mode-label').textContent = isVersus ? 'VERSUS' : 'KOOP';
+            document.getElementById('mistake-label').textContent = `${mistakes}${isVersus ? '' : '/10'}`;
+
+            document.getElementById('p1-card').classList.toggle('active', currentPlayer === 0 || !isVersus);
+            document.getElementById('p2-card').classList.toggle('active', currentPlayer === 1 && isVersus);
+
+            document.getElementById('current-player-text').textContent = players[currentPlayer].name;
             document.getElementById('current-player-text').style.color = players[currentPlayer].color;
+            document.getElementById('turn-label').textContent = players[currentPlayer].name;
+            document.getElementById('turn-label').style.color = players[currentPlayer].color;
+
+            document.getElementById('mode-versus-btn').classList.toggle('active', isVersus);
+            document.getElementById('mode-coop-btn').classList.toggle('active', !isVersus);
         }
 
-        function log(msg) {
-            const l = document.getElementById('log');
-            l.innerHTML = `> ${msg}<br>${l.innerHTML}`;
+        function openModal(html) {
+            const modal = document.getElementById('modal');
+            const inner = document.getElementById('modal-inner');
+            inner.innerHTML = html;
+            modal.style.display = 'flex';
         }
 
-        // Trivia Logic
-        function showTrivia() {
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function showWinModal(title, msg) {
+            openModal(`
+                <div class="modal-title">${title}</div>
+                <div class="result-note winbox">${msg}</div>
+                <button class="btn" id="restart-btn">MAIN LAGI</button>
+            `);
+            document.getElementById('restart-btn').onclick = restartGame;
+        }
+
+        function restartGame() {
+            closeModal();
+            players = [
+                { id: 1, pos: 1, color: '#FF4D4D', visualPos: 1, name: 'MERAH' },
+                { id: 2, pos: 1, color: '#4D79FF', visualPos: 1, name: 'BIRU' }
+            ];
+            currentPlayer = 0;
+            mistakes = 0;
+            usedQuestions = {
+                Sumatera: [],
+                Jawa: [],
+                Kalimantan: [],
+                Sulawesi: [],
+                "Timur Indonesia": []
+            };
+            unlockedAlbum = new Set();
+            gameState = 'idle';
+            document.getElementById('dice').textContent = '?';
+            updateAlbum();
+            updateUI();
+            drawBoard();
+            log("Permainan dimulai ulang.");
+        }
+
+        async function askTrivia(playerIdx) {
+            const zone = getZone(players[playerIdx].pos);
+            const q = getQuestionByZone(zone.name);
+            if (!q) return;
+
             return new Promise(resolve => {
-                const modal = document.getElementById('modal');
-                const inner = document.getElementById('modal-inner');
-                const q = questions[Math.floor(Math.random() * questions.length)];
+                let html = `
+                    <div class="modal-title">Trivia Nusantara</div>
+                    <div class="question-zone" style="background:${zone.color}">${zone.name}</div>
+                    <p style="font-weight:700; margin-bottom:14px;">${q.q}</p>
+                    <div id="options-wrap"></div>
+                `;
+                openModal(html);
 
-                modal.style.display = 'flex';
-                inner.innerHTML = `<h3>KOTAK TRIVIA!</h3><p style="margin:15px 0">${q.q}</p>`;
-                
+                const wrap = document.getElementById('options-wrap');
                 q.a.forEach((opt, i) => {
                     const b = document.createElement('button');
                     b.className = 'btn btn-opt';
-                    b.textContent = `${String.fromCharCode(65+i)}. ${opt}`;
+                    b.textContent = `${String.fromCharCode(65 + i)}. ${opt}`;
                     b.onclick = async () => {
-                        modal.style.display = 'none';
-                        if (i === q.c) {
-                            log("BENAR! Maju 3 langkah.");
-                            await movePlayer(currentPlayer, Math.min(100, players[currentPlayer].pos + 3));
+                        const correct = i === q.c;
+                        wrap.querySelectorAll('button').forEach(btn => btn.disabled = true);
+
+                        if (correct) {
+                            sound.correct();
+                            unlockedAlbum.add(q.album);
+                            updateAlbum();
+                            log(`Benar! ${players[playerIdx].name} maju 2 langkah bonus.`);
+                            document.getElementById('modal-inner').innerHTML += `<div class="result-note ok">Jawaban benar! Bonus maju 2 langkah.</div>`;
+                            await new Promise(r => setTimeout(r, 600));
+                            closeModal();
+                            await movePlayer(playerIdx, Math.min(100, players[playerIdx].pos + 2));
+                            await applyBoardEffects(playerIdx);
                         } else {
-                            log("SALAH! Mundur 2 langkah.");
-                            await movePlayer(currentPlayer, Math.max(1, players[currentPlayer].pos - 2));
+                            sound.wrong();
+                            mistakes++;
+                            log(`Salah. ${players[playerIdx].name} tidak mendapat bonus.`);
+                            document.getElementById('modal-inner').innerHTML += `<div class="result-note bad">Belum tepat. Giliran tetap lanjut tanpa bonus.</div>`;
+                            await new Promise(r => setTimeout(r, 700));
+                            closeModal();
                         }
+
                         resolve();
                     };
-                    inner.appendChild(b);
+                    wrap.appendChild(b);
                 });
             });
         }
 
-        // Init
-        document.getElementById('roll-btn').onclick = handleTurn;
-        drawBoard();
+        async function finishTurnChecks(playerIdx) {
+            const p = players[playerIdx];
 
-        // Canvas hover effect simulation
-        canvas.onmousemove = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const col = Math.floor(x / (rect.width / 10));
-            const row = 9 - Math.floor(y / (rect.height / 10));
-            // Just for visual feedback we don't redraw everything to keep performance
+            if (p.pos >= 100) {
+                sound.win();
+                if (gameMode === 'versus') {
+                    showWinModal('Selamat!', `Pemain ${playerIdx + 1} (${p.name}) berhasil mencapai petak 100 dan menjadi pemenang!`);
+                } else {
+                    showWinModal('Misi Berhasil!', `Tim berhasil menyelesaikan perjalanan Nusantara dengan ${mistakes} kesalahan.`);
+                }
+                gameState = 'gameover';
+                return true;
+            }
+
+            if (gameMode === 'coop' && mistakes >= maxMistakes) {
+                sound.wrong();
+                showWinModal('Misi Gagal', `Tim mencapai batas ${maxMistakes} kesalahan. Coba lagi dan isi Album Nusantara lebih banyak!`);
+                gameState = 'gameover';
+                return true;
+            }
+
+            return false;
+        }
+
+        async function handleTurn() {
+            if (gameState !== 'idle') return;
+
+            ensureAudio();
+            const btn = document.getElementById('roll-btn');
+            const diceDiv = document.getElementById('dice');
+
+            btn.disabled = true;
+            gameState = 'rolling';
+
+            sound.roll();
+            diceDiv.classList.add('rolling');
+
+            let roll = 0;
+            for (let i = 0; i < 10; i++) {
+                roll = Math.floor(Math.random() * 6) + 1;
+                diceDiv.textContent = roll;
+                await new Promise(r => setTimeout(r, 55));
+            }
+
+            diceDiv.classList.remove('rolling');
+
+            const p = players[currentPlayer];
+            const target = p.pos + roll;
+
+            if (target > 100) {
+                log(`${p.name} butuh angka ${100 - p.pos} untuk mencapai petak 100.`);
+            } else {
+                log(`${p.name} melempar ${roll} dan maju ke petak ${target}.`);
+                await movePlayer(currentPlayer, target);
+                await applyBoardEffects(currentPlayer);
+                await askTrivia(currentPlayer);
+
+                const ended = await finishTurnChecks(currentPlayer);
+                if (ended) {
+                    btn.disabled = false;
+                    return;
+                }
+            }
+
+            if (gameMode === 'versus') {
+                currentPlayer = currentPlayer === 0 ? 1 : 0;
+            } else {
+                currentPlayer = currentPlayer === 0 ? 1 : 0;
+                log("Mode kooperatif: pemain berikutnya membantu tim.");
+            }
+
+            updateUI();
+            btn.disabled = false;
+            gameState = 'idle';
+        }
+
+        document.getElementById('roll-btn').onclick = handleTurn;
+        document.getElementById('dice').onclick = handleTurn;
+
+        document.getElementById('mode-versus-btn').onclick = () => {
+            if (gameState === 'moving' || gameState === 'rolling') return;
+            gameMode = 'versus';
+            restartGame();
+            updateUI();
+            log("Mode permainan diubah ke VERSUS.");
         };
 
+        document.getElementById('mode-coop-btn').onclick = () => {
+            if (gameState === 'moving' || gameState === 'rolling') return;
+            gameMode = 'coop';
+            restartGame();
+            updateUI();
+            log("Mode permainan diubah ke KOOPERATIF.");
+        };
+
+        updateAlbum();
+        updateUI();
+        drawBoard();
     </script>
 </body>
 </html>
