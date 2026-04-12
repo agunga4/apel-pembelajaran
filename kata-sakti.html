@@ -303,246 +303,207 @@
       margin-top: 12px;
     }
 
-    button.action,
-    .menu-btn {
+    .btn {
       border: 3px solid var(--line);
-      border-radius: 16px;
+      border-radius: 14px;
+      background: var(--white);
       box-shadow: var(--shadow-sm);
-      min-height: 52px;
-      padding: 10px 8px;
-      font-family: inherit;
-      font-size: .95rem;
-      font-weight: 700;
+      padding: 8px 6px;
+      font-size: .82rem;
       cursor: pointer;
-      transition: .1s;
-      background: white;
-      position: relative;
+      text-align: center;
+      line-height: 1.2;
     }
 
-    button.action:active,
-    .icon-btn:active,
-    .menu-btn:active {
+    .btn.primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn.danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn:active {
       transform: translateY(2px);
       box-shadow: 0 2px 0 #111827;
     }
 
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-warning { background: var(--accent); color: #111827; }
-    .btn-danger  { background: #fb7185; color: white; }
-    .btn-light   { background: white; color: var(--text); }
-
-    .stars {
-      display: inline-flex;
-      gap: 4px;
-      font-size: 1.15rem;
-    }
-
-    .star.off { opacity: .25; }
-
     .overlay {
       position: absolute;
       inset: 0;
-      background: rgba(255, 253, 247, .96);
-      z-index: 50;
+      background: rgba(15,23,42,0.88);
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       padding: 16px;
-      pointer-events: auto;
-    }
-
-    .overlay[hidden] {
-      display: none !important;
-      pointer-events: none !important;
-      visibility: hidden !important;
+      z-index: 30;
     }
 
     .menu-card {
       width: 100%;
       max-width: 520px;
-      background: white;
-      border: 3px solid var(--line);
+      background: var(--panel);
       border-radius: 24px;
+      border: 3px solid var(--line);
       box-shadow: var(--shadow);
-      padding: 18px;
-      text-align: center;
-      position: relative;
-      z-index: 60;
-      pointer-events: auto;
+      padding: 18px 16px 16px;
     }
 
-    .menu-card h1,
-    .menu-card h2,
-    .menu-card h3 {
-      margin: 0 0 8px;
-      line-height: 1.1;
+    .menu-card h2 {
+      margin: 0 0 4px;
+      font-size: 1.3rem;
+      text-align: center;
     }
 
     .menu-card p {
-      margin: 0 0 14px;
+      margin: 0 0 12px;
+      font-size: .88rem;
+      text-align: center;
       color: var(--muted);
-      line-height: 1.45;
     }
 
     .menu-grid {
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 10px;
-      margin-top: 10px;
-      position: relative;
-      z-index: 61;
-    }
-
-    .menu-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      position: relative;
-      z-index: 61;
-    }
-
-    .menu-btn {
-      z-index: 62;
-      pointer-events: auto;
-    }
-
-    .menu-btn.primary {
-      background: linear-gradient(135deg, #2dd4bf, #14b8a6);
-      color: white;
-    }
-
-    #playBtn {
-      z-index: 999;
-      pointer-events: auto !important;
     }
 
     .theme-card {
-      text-align: left;
-      padding: 12px;
-      border: 3px solid var(--line);
       border-radius: 18px;
-      background: #f9fafb;
-      box-shadow: var(--shadow-sm);
-      position: relative;
-      z-index: 61;
+      border: 3px solid var(--line);
+      background: #f3f4f6;
+      padding: 10px;
     }
 
     .theme-card strong {
       display: block;
-      margin-bottom: 3px;
-      font-size: .95rem;
+      margin-bottom: 6px;
+      font-size: .9rem;
+    }
+
+    .menu-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 8px;
+    }
+
+    .menu-btn {
+      border-radius: 16px;
+      border: 3px solid var(--line);
+      background: white;
+      padding: 8px 8px;
+      font-size: .86rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      min-height: 52px;
+    }
+
+    .menu-btn.primary {
+      margin-top: 6px;
+      width: 100%;
+      background: var(--primary);
+      color: white;
+    }
+
+    .menu-btn.selected {
+      background: #bbf7d0;
+      border-color: #16a34a;
     }
 
     .tiny {
-      font-size: .78rem;
+      font-size: .72rem;
       color: var(--muted);
     }
 
     .footer-note {
-      margin-top: 12px;
-      font-size: .8rem;
+      font-size: .78rem;
       color: var(--muted);
+      margin-top: 6px;
+      text-align: center;
     }
 
     .toast {
       position: fixed;
+      bottom: 14px;
       left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%) translateY(20px);
-      min-width: min(92vw, 420px);
-      max-width: 92vw;
+      transform: translateX(-50%);
       background: #111827;
       color: white;
-      border-radius: 16px;
-      border: 3px solid white;
-      padding: 12px 14px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-      z-index: 80;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: .8rem;
       opacity: 0;
       pointer-events: none;
-      transition: .25s ease;
-      text-align: center;
-      font-size: .9rem;
-      line-height: 1.4;
+      transition: opacity .25s ease, transform .25s ease;
+      z-index: 50;
     }
 
     .toast.show {
       opacity: 1;
-      transform: translateX(-50%) translateY(0);
+      transform: translate(-50%, -4px);
     }
 
-    #confetti {
-      position: fixed;
-      inset: 0;
-      pointer-events: none !important;
-      z-index: 10;
+    .stars {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      font-size: 1.4rem;
+      margin-top: 6px;
     }
 
-    @media (max-width: 540px) {
-      .hud { grid-template-columns: repeat(2, 1fr); }
-      .controls { grid-template-columns: repeat(2, 1fr); }
-      .word-list { grid-template-columns: 1fr 1fr; }
-      .menu-row { grid-template-columns: 1fr; }
-      .brand-title { font-size: 1rem; }
-      .cell { font-size: .95rem; }
-    }
-
-    @media (max-width: 390px) {
-      :root { --cell-size: min(8.25vw, 34px); }
-      .app { padding: 10px; border-radius: 18px; }
-      .panel, .grid-shell { padding: 8px; }
-      .word-item { min-height: 48px; font-size: .78rem; padding: 6px 8px; }
-      button.action, .menu-btn { font-size: .85rem; }
+    @media (min-width: 720px) {
+      :root {
+        --cell-size: 40px;
+      }
     }
   </style>
 </head>
 <body>
-  <canvas id="confetti"></canvas>
-
   <main class="app">
-    <section class="topbar">
+    <header class="topbar">
       <div class="brand">
-        <h1 class="brand-title">KATA SAKTI ULTRA ✨</h1>
-        <p class="brand-sub">Cari kata, pahami makna, naikkan bintangmu!</p>
+        <h1 class="brand-title">KATA SAKTI ULTRA</h1>
+        <p class="brand-sub">Wordsearch seru + info singkat untuk anak.</p>
       </div>
-      <button type="button" class="icon-btn" id="muteBtn" aria-label="Nyalakan atau matikan suara">🔊</button>
-    </section>
+      <button type="button" class="icon-btn" id="menuButton" title="Menu">
+        ☰
+      </button>
+    </header>
 
     <section class="hud">
       <div class="stat">
-        <span class="stat-label">SKOR</span>
-        <span class="stat-value" id="scoreEl">0</span>
+        <span class="stat-label">Tema</span>
+        <span class="stat-value" id="statTheme">-</span>
       </div>
       <div class="stat">
-        <span class="stat-label">WAKTU</span>
-        <span class="stat-value" id="timerEl">--</span>
+        <span class="stat-label">Level</span>
+        <span class="stat-value" id="statLevel">-</span>
       </div>
       <div class="stat">
-        <span class="stat-label">TEMUKAN</span>
-        <span class="stat-value" id="foundEl">0/0</span>
+        <span class="stat-label">Mode</span>
+        <span class="stat-value" id="statMode">-</span>
       </div>
       <div class="stat">
-        <span class="stat-label">BINTANG</span>
-        <span class="stat-value stars" id="starsEl">
-          <span class="star off">★</span>
-          <span class="star off">★</span>
-          <span class="star off">★</span>
-        </span>
+        <span class="stat-label">Waktu</span>
+        <span class="stat-value" id="statTime">00:00</span>
       </div>
     </section>
 
-    <div class="progress-wrap" aria-hidden="true">
-      <div class="progress-bar" id="progressBar"></div>
+    <div class="progress-wrap" id="timeBarWrap">
+      <div class="progress-bar" id="timeBar"></div>
     </div>
 
     <section class="panel">
       <div class="mission">
-        <span class="badge" id="themeBadge">📚 Tema: -</span>
-        <span class="badge" id="modeBadge">🎮 Mode: -</span>
-        <span class="badge" id="levelBadge">⭐ Level: -</span>
+        <span class="badge" id="missionBadge">Pilih tema dan mulai permainan.</span>
+        <span class="badge" style="background:#e0f2fe;">🎯 0 / 0 kata</span>
       </div>
       <div class="learn-box">
-        <h2 class="learn-title">Petunjuk Belajar</h2>
-        <p class="learn-text" id="learnText">Pilih level dan tema dulu, lalu cari kata di papan huruf. Kamu bisa geser jari atau mouse dari huruf awal ke huruf akhir.</p>
+        <p class="learn-title" id="learnTitle">Belajar Kata</p>
+        <p class="learn-text" id="learnText">Setelah memilih kata, info singkat akan muncul di sini.</p>
       </div>
     </section>
 
@@ -551,18 +512,13 @@
     </section>
 
     <section class="panel">
-      <div class="mission">
-        <strong>Kata Target</strong>
-        <span class="tiny" id="remainingText">Sisa kata: 0</span>
+      <div class="word-list" id="wordList"></div>
+      <div class="controls">
+        <button type="button" class="btn primary" id="hintBtn">🔍 Petunjuk</button>
+        <button type="button" class="btn" id="shuffleBtn">🔁 Ulang Grid</button>
+        <button type="button" class="btn" id="newThemeBtn">🎨 Ganti Tema</button>
+        <button type="button" class="btn danger" id="resetBtn">⏱ Ulang Game</button>
       </div>
-      <div id="wordList" class="word-list"></div>
-    </section>
-
-    <section class="controls">
-      <button type="button" class="action btn-light" id="menuBtn" onclick="openMenu()">MENU</button>
-      <button type="button" class="action btn-warning" id="hintBtn" onclick="handleHint()">HINT</button>
-      <button type="button" class="action btn-primary" id="restartBtn" onclick="restartSame()">ULANG</button>
-      <button type="button" class="action btn-danger" id="backBtn" onclick="goBack()">KEMBALI</button>
     </section>
 
     <div class="overlay" id="startMenu">
@@ -597,7 +553,6 @@
             type="button"
             class="menu-btn primary"
             id="playBtn"
-            onclick="forceStartGame()"
           >
             ▶ MAINKAN SEKARANG
           </button>
@@ -619,8 +574,8 @@
           <p id="endBreakdown" style="margin-top:8px;"></p>
         </div>
         <div class="menu-row">
-          <button type="button" class="menu-btn primary" onclick="forceStartGame()">MAIN LAGI</button>
-          <button type="button" class="menu-btn" onclick="openMenu()">PILIH MENU</button>
+          <button type="button" class="menu-btn primary" id="playAgainBtn">MAIN LAGI</button>
+          <button type="button" class="menu-btn" id="openMenuBtn">PILIH MENU</button>
         </div>
       </div>
     </div>
@@ -688,664 +643,473 @@
       }
     };
 
-    const LEVELS = {
-      easy: {
-        label: "Mudah",
-        size: 8,
-        picks: 6,
-        directions: [[1,0], [0,1], [-1,0], [0,-1]],
-        time: 0
-      },
-      medium: {
-        label: "Sedang",
-        size: 10,
-        picks: 7,
-        directions: [[1,0], [0,1], [-1,0], [0,-1], [1,1], [-1,-1], [1,-1], [-1,1]],
-        time: 140
-      },
-      hard: {
-        label: "Sulit",
-        size: 12,
-        picks: 8,
-        directions: [[1,0], [0,1], [-1,0], [0,-1], [1,1], [-1,-1], [1,-1], [-1,1]],
-        time: 170
-      }
+    const LEVEL_CONFIG = {
+      easy:   { size: 8,  allowDiagonal: false, allowAllDirs: false, time: null },
+      medium: { size: 10, allowDiagonal: true,  allowAllDirs: false, time: 300 },
+      hard:   { size: 12, allowDiagonal: true,  allowAllDirs: true,  time: 240 }
     };
 
-    const els = {
-      grid: document.getElementById('grid'),
-      scoreEl: document.getElementById('scoreEl'),
-      timerEl: document.getElementById('timerEl'),
-      foundEl: document.getElementById('foundEl'),
-      starsEl: document.getElementById('starsEl'),
-      progressBar: document.getElementById('progressBar'),
-      learnText: document.getElementById('learnText'),
-      themeBadge: document.getElementById('themeBadge'),
-      modeBadge: document.getElementById('modeBadge'),
-      levelBadge: document.getElementById('levelBadge'),
-      wordList: document.getElementById('wordList'),
-      remainingText: document.getElementById('remainingText'),
-      startMenu: document.getElementById('startMenu'),
-      endMenu: document.getElementById('endMenu'),
-      endTitle: document.getElementById('endTitle'),
-      endSummary: document.getElementById('endSummary'),
-      endBreakdown: document.getElementById('endBreakdown'),
-      endStars: document.getElementById('endStars'),
-      toast: document.getElementById('toast'),
-      muteBtn: document.getElementById('muteBtn'),
-      themeOptions: document.getElementById('themeOptions')
-    };
+    const gridEl = document.getElementById("grid");
+    const wordListEl = document.getElementById("wordList");
+    const missionBadge = document.getElementById("missionBadge");
+    const learnTitle = document.getElementById("learnTitle");
+    const learnText = document.getElementById("learnText");
+    const timeBar = document.getElementById("timeBar");
+    const timeBarWrap = document.getElementById("timeBarWrap");
+    const statTheme = document.getElementById("statTheme");
+    const statLevel = document.getElementById("statLevel");
+    const statMode = document.getElementById("statMode");
+    const statTime = document.getElementById("statTime");
 
-    const state = {
-      selectedTheme: 'sekolah',
-      selectedLevel: 'easy',
-      selectedMode: 'relax',
-      size: 8,
-      gridData: [],
-      targetWords: [],
-      foundWords: [],
-      foundSet: new Set(),
-      score: 0,
-      hintsUsed: 0,
-      combo: 0,
-      gameActive: false,
-      timeLeft: 0,
-      timerInterval: null,
-      muted: false,
-      pointerDown: false,
-      anchorIndex: null,
-      previewPath: [],
-      totalTime: 0
-    };
+    const startMenu = document.getElementById("startMenu");
+    const endMenu = document.getElementById("endMenu");
+    const endTitle = document.getElementById("endTitle");
+    const endSummary = document.getElementById("endSummary");
+    const endBreakdown = document.getElementById("endBreakdown");
+    const endStars = document.getElementById("endStars");
+    const themeOptions = document.getElementById("themeOptions");
+    const toastEl = document.getElementById("toast");
 
-    const confettiCanvas = document.getElementById('confetti');
-    const cctx = confettiCanvas.getContext('2d');
-    let confettiPieces = [];
-    let confettiRunning = false;
-    let audioCtx = null;
+    const playBtn = document.getElementById("playBtn");
+    const playAgainBtn = document.getElementById("playAgainBtn");
+    const openMenuBtn = document.getElementById("openMenuBtn");
+    const menuButton = document.getElementById("menuButton");
 
-    function initThemeMenu() {
-      els.themeOptions.innerHTML = '';
-      Object.entries(GAME_DATA).forEach(([key, item]) => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'menu-btn';
-        btn.dataset.theme = key;
-        btn.innerHTML = `${item.icon} ${item.label}<br><span class="tiny">8 kosakata</span>`;
-        btn.onclick = () => {
-          state.selectedTheme = key;
-          refreshMenuSelections();
-        };
-        els.themeOptions.appendChild(btn);
-      });
+    const hintBtn = document.getElementById("hintBtn");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+    const newThemeBtn = document.getElementById("newThemeBtn");
+    const resetBtn = document.getElementById("resetBtn");
 
-      document.querySelectorAll('[data-level]').forEach(btn => {
-        btn.onclick = () => {
-          state.selectedLevel = btn.dataset.level;
-          refreshMenuSelections();
-        };
-      });
+    let currentTheme = null;
+    let currentLevel = "easy";
+    let currentMode = "relax";
+    let currentConfig = LEVEL_CONFIG.easy;
+    let activeWords = [];
+    let grid = [];
+    let foundWords = new Set();
+    let startTime = null;
+    let timerId = null;
 
-      document.querySelectorAll('[data-mode]').forEach(btn => {
-        btn.onclick = () => {
-          state.selectedMode = btn.dataset.mode;
-          refreshMenuSelections();
-        };
-      });
+    let pointerDown = false;
+    let dragPath = [];
+    let dragCells = new Set();
 
-      refreshMenuSelections();
+    const DIRS_BASIC = [
+      [0,1],[1,0],[0,-1],[-1,0]
+    ];
+    const DIRS_DIAG = [
+      [1,1],[1,-1],[-1,1],[-1,-1]
+    ];
+
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      setTimeout(() => toastEl.classList.remove("show"), 1600);
     }
 
-    function refreshMenuSelections() {
-      document.querySelectorAll('[data-theme]').forEach(btn => {
-        btn.style.background = btn.dataset.theme === state.selectedTheme ? '#ccfbf1' : 'white';
-      });
-      document.querySelectorAll('[data-level]').forEach(btn => {
-        btn.style.background = btn.dataset.level === state.selectedLevel ? '#fde68a' : 'white';
-      });
-      document.querySelectorAll('[data-mode]').forEach(btn => {
-        btn.style.background = btn.dataset.mode === state.selectedMode ? '#dbeafe' : 'white';
-      });
+    function formatSeconds(sec) {
+      if (sec == null) return "∞";
+      const m = Math.floor(sec / 60).toString().padStart(2,"0");
+      const s = Math.floor(sec % 60).toString().padStart(2,"0");
+      return `${m}:${s}`;
     }
-
-    function shuffle(arr) {
-      const a = [...arr];
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
-
-    function showToast(message, duration = 1800) {
-      els.toast.textContent = message;
-      els.toast.classList.add('show');
-      clearTimeout(showToast._t);
-      showToast._t = setTimeout(() => els.toast.classList.remove('show'), duration);
-    }
-
-    function ensureAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume().catch(() => {});
-      }
-    }
-
-    function playTone(freq = 440, type = 'sine', duration = 0.12, volume = 0.05) {
-      if (state.muted) return;
-      try {
-        ensureAudio();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(volume, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-      } catch(e) {}
-    }
-
-    function clickSound() { playTone(380, 'sine', 0.08, 0.035); }
-    function successSound() {
-      playTone(520, 'triangle', 0.16, 0.05);
-      setTimeout(() => playTone(740, 'triangle', 0.18, 0.04), 90);
-    }
-    function failSound() { playTone(190, 'sawtooth', 0.12, 0.03); }
-    function warningSound() { playTone(300, 'square', 0.08, 0.025); }
 
     function updateHUD() {
-      els.scoreEl.textContent = state.score;
-      els.foundEl.textContent = `${state.foundWords.length}/${state.targetWords.length}`;
-      els.remainingText.textContent = `Sisa kata: ${state.targetWords.length - state.foundWords.length}`;
+      statTheme.textContent = currentTheme ? GAME_DATA[currentTheme].label : "-";
+      statLevel.textContent = currentLevel.toUpperCase();
+      statMode.textContent = currentMode === "relax" ? "Santai" : "Tantangan";
 
-      if (state.selectedMode === 'relax') {
-        els.timerEl.textContent = '∞';
-        els.progressBar.style.width = '100%';
+      if (!currentConfig.time || currentMode === "relax") {
+        statTime.textContent = "∞";
+        timeBar.style.width = "100%";
+        timeBarWrap.style.opacity = 0.3;
       } else {
-        els.timerEl.textContent = state.timeLeft;
-        const pct = state.totalTime > 0 ? Math.max(0, (state.timeLeft / state.totalTime) * 100) : 100;
-        els.progressBar.style.width = pct + '%';
-      }
-
-      const stars = calcStars();
-      els.starsEl.innerHTML = `
-        <span class="star ${stars >= 1 ? '' : 'off'}">★</span>
-        <span class="star ${stars >= 2 ? '' : 'off'}">★</span>
-        <span class="star ${stars >= 3 ? '' : 'off'}">★</span>
-      `;
-
-      const themeData = GAME_DATA[state.selectedTheme];
-      els.themeBadge.textContent = `${themeData.icon} Tema: ${themeData.label}`;
-      els.modeBadge.textContent = state.selectedMode === 'relax' ? '🌈 Mode: Santai' : '⏱️ Mode: Tantangan';
-      els.levelBadge.textContent = `⭐ Level: ${LEVELS[state.selectedLevel].label}`;
-    }
-
-    function calcStars() {
-      const foundRatio = state.targetWords.length ? state.foundWords.length / state.targetWords.length : 0;
-      if (!state.gameActive && foundRatio === 1) {
-        if (state.hintsUsed === 0 && (state.selectedMode === 'relax' || state.timeLeft > Math.floor(state.totalTime * 0.35))) return 3;
-        if (state.hintsUsed <= 1) return 2;
-        return 1;
-      }
-      if (foundRatio >= 0.75) return 2;
-      if (foundRatio >= 0.35) return 1;
-      return 0;
-    }
-
-    function forceStartGame() {
-      try {
-        ensureAudio();
-        stopConfetti();
-        startGame();
-      } catch (err) {
-        console.error('Gagal menjalankan game:', err);
-        alert('Tombol mulai tertekan, tapi ada error di script. Cek console browser.');
+        const used = Math.floor((Date.now() - startTime) / 1000);
+        const left = Math.max(0, currentConfig.time - used);
+        const pct = (left / currentConfig.time) * 100;
+        statTime.textContent = formatSeconds(left);
+        timeBar.style.width = `${pct}%`;
+        timeBarWrap.style.opacity = 1;
       }
     }
 
-    function startGame() {
-      const level = LEVELS[state.selectedLevel];
-      const theme = GAME_DATA[state.selectedTheme];
-
-      state.size = level.size;
-      state.score = 0;
-      state.combo = 0;
-      state.hintsUsed = 0;
-      state.foundWords = [];
-      state.foundSet = new Set();
-      state.gridData = [];
-      state.pointerDown = false;
-      state.anchorIndex = null;
-      state.previewPath = [];
-      state.gameActive = true;
-
-      let pool = shuffle(theme.words).slice(0, level.picks);
-      pool = pool.filter(item => item.word.length <= state.size);
-      state.targetWords = pool;
-
-      if (state.selectedMode === 'challenge') {
-        state.totalTime = level.time;
-        state.timeLeft = level.time;
-      } else {
-        state.totalTime = 0;
-        state.timeLeft = 0;
-      }
-
-      generateBoard();
-      renderGrid();
-      renderWordList();
-      updateHUD();
-      updateLearnText(`Tema ${theme.label}. Cari semua kata di papan. Kamu bisa geser dari huruf awal ke huruf akhir.`);
-
-      clearInterval(state.timerInterval);
-      if (state.selectedMode === 'challenge') {
-        state.timerInterval = setInterval(() => {
-          if (!state.gameActive) return;
-          state.timeLeft--;
-          updateHUD();
-          if (state.timeLeft === 20) {
-            warningSound();
-            showToast('Waktu tinggal 20 detik!');
-          }
-          if (state.timeLeft <= 0) {
-            endGame(false);
-          }
-        }, 1000);
-      }
-
-      els.startMenu.hidden = true;
-      els.endMenu.hidden = true;
+    function buildThemeButtons() {
+      themeOptions.innerHTML = "";
+      Object.entries(GAME_DATA).forEach(([key, data]) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "menu-btn";
+        btn.dataset.theme = key;
+        btn.innerHTML = `${data.icon} ${data.label}<br><span class="tiny">${data.words.length} kosakata</span>`;
+        themeOptions.appendChild(btn);
+      });
     }
 
-    function generateBoard() {
-      const size = state.size;
-      const directions = LEVELS[state.selectedLevel].directions;
-      let success = false;
-      let attempts = 0;
-
-      while (!success && attempts < 80) {
-        const grid = Array(size * size).fill(null);
-        const placements = [];
-        let allPlaced = true;
-
-        for (const item of state.targetWords) {
-          let placed = false;
-          let localAttempts = 0;
-
-          while (!placed && localAttempts < 120) {
-            const dir = directions[Math.floor(Math.random() * directions.length)];
-            const x = Math.floor(Math.random() * size);
-            const y = Math.floor(Math.random() * size);
-
-            if (canPlaceWord(grid, item.word, x, y, dir, size)) {
-              const path = [];
-              for (let i = 0; i < item.word.length; i++) {
-                const nx = x + i * dir[0];
-                const ny = y + i * dir[1];
-                const idx = ny * size + nx;
-                grid[idx] = item.word[i];
-                path.push(idx);
-              }
-              placements.push({ ...item, path });
-              placed = true;
-            }
-            localAttempts++;
-          }
-
-          if (!placed) {
-            allPlaced = false;
-            break;
-          }
-        }
-
-        if (allPlaced) {
-          const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-          for (let i = 0; i < grid.length; i++) {
-            if (!grid[i]) grid[i] = letters[Math.floor(Math.random() * letters.length)];
-          }
-          state.gridData = grid;
-          state.targetWords = placements;
-          success = true;
-        }
-
-        attempts++;
-      }
-
-      if (!success) {
-        const fallback = shuffle(GAME_DATA[state.selectedTheme].words).slice(0, Math.max(4, LEVELS[state.selectedLevel].picks - 1));
-        state.targetWords = fallback.filter(item => item.word.length <= state.size);
-        return generateBoard();
-      }
+    function applyMenuSelection() {
+      document.querySelectorAll(".menu-btn[data-theme]").forEach(btn => {
+        btn.classList.toggle("selected", btn.dataset.theme === currentTheme);
+      });
+      document.querySelectorAll(".menu-btn[data-level]").forEach(btn => {
+        btn.classList.toggle("selected", btn.dataset.level === currentLevel);
+      });
+      document.querySelectorAll(".menu-btn[data-mode]").forEach(btn => {
+        btn.classList.toggle("selected", btn.dataset.mode === currentMode);
+      });
     }
 
-    function canPlaceWord(grid, word, x, y, dir, size) {
-      for (let i = 0; i < word.length; i++) {
-        const nx = x + i * dir[0];
-        const ny = y + i * dir[1];
-        if (nx < 0 || ny < 0 || nx >= size || ny >= size) return false;
-        const index = ny * size + nx;
-        const existing = grid[index];
-        if (existing && existing !== word[i]) return false;
-      }
-      return true;
-    }
+    function initMenuEvents() {
+      themeOptions.addEventListener("click", (e) => {
+        const btn = e.target.closest(".menu-btn[data-theme]");
+        if (!btn) return;
+        currentTheme = btn.dataset.theme;
+        applyMenuSelection();
+      });
 
-    function renderGrid() {
-      const size = state.size;
-      els.grid.style.gridTemplateColumns = `repeat(${size}, var(--cell-size))`;
-      els.grid.innerHTML = '';
-
-      state.gridData.forEach((char, index) => {
-        const cell = document.createElement('div');
-        cell.className = 'cell';
-        cell.dataset.index = index;
-        cell.textContent = char;
-
-        cell.addEventListener('pointerdown', (e) => {
-          e.preventDefault();
-          if (!state.gameActive) return;
-          ensureAudio();
-          state.pointerDown = true;
-          state.anchorIndex = index;
-          clearPreview();
-          markPreview([index], true);
-          clickSound();
+      document.querySelectorAll(".menu-btn[data-level]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          currentLevel = btn.dataset.level;
+          currentConfig = LEVEL_CONFIG[currentLevel];
+          applyMenuSelection();
         });
+      });
 
-        cell.addEventListener('pointerenter', () => {
-          if (!state.gameActive || !state.pointerDown || state.anchorIndex === null) return;
-          const path = getLinePath(state.anchorIndex, index);
-          if (path) {
-            clearPreview();
-            markPreview(path, true);
-          }
+      document.querySelectorAll(".menu-btn[data-mode]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          currentMode = btn.dataset.mode;
+          applyMenuSelection();
         });
-
-        cell.addEventListener('pointerup', (e) => {
-          e.preventDefault();
-          if (!state.gameActive) return;
-          finishSelection(index);
-        });
-
-        els.grid.appendChild(cell);
-      });
-    }
-
-    function renderWordList() {
-      els.wordList.innerHTML = '';
-      state.targetWords.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'word-item';
-        div.id = 'word-' + item.word;
-        div.textContent = item.word;
-        els.wordList.appendChild(div);
-      });
-      updateHUD();
-    }
-
-    function getCell(index) {
-      return els.grid.querySelector(`[data-index="${index}"]`);
-    }
-
-    function clearPreview() {
-      els.grid.querySelectorAll('.cell.preview, .cell.anchor').forEach(el => {
-        el.classList.remove('preview', 'anchor');
-      });
-      state.previewPath = [];
-    }
-
-    function markPreview(path, withAnchor = false) {
-      state.previewPath = path;
-      path.forEach((idx, i) => {
-        const cell = getCell(idx);
-        if (!cell || cell.classList.contains('found')) return;
-        cell.classList.add(i === 0 && withAnchor ? 'anchor' : 'preview');
-      });
-    }
-
-    function finishSelection(endIndex) {
-      if (!state.pointerDown || state.anchorIndex === null) return;
-      const path = getLinePath(state.anchorIndex, endIndex);
-
-      if (!path) {
-        failSound();
-        resetPointer();
-        return;
-      }
-
-      const word = path.map(i => state.gridData[i]).join('');
-      const reversed = word.split('').reverse().join('');
-      const match = state.targetWords.find(item => item.word === word || item.word === reversed);
-
-      if (match && !state.foundSet.has(match.word)) {
-        markFound(match.word, path);
-      } else {
-        state.combo = 0;
-        failSound();
-        showToast('Belum cocok. Coba lagi ya!');
-      }
-
-      resetPointer();
-    }
-
-    function resetPointer() {
-      state.pointerDown = false;
-      state.anchorIndex = null;
-      clearPreview();
-    }
-
-    function getLinePath(start, end) {
-      const size = state.size;
-      const x1 = start % size, y1 = Math.floor(start / size);
-      const x2 = end % size, y2 = Math.floor(end / size);
-      const dx = x2 - x1;
-      const dy = y2 - y1;
-
-      if (dx === 0 && dy === 0) return [start];
-
-      const absX = Math.abs(dx);
-      const absY = Math.abs(dy);
-
-      if (!(dx === 0 || dy === 0 || absX === absY)) return null;
-
-      const dist = Math.max(absX, absY);
-      const stepX = dx === 0 ? 0 : dx / dist;
-      const stepY = dy === 0 ? 0 : dy / dist;
-
-      const path = [];
-      for (let i = 0; i <= dist; i++) {
-        const x = x1 + stepX * i;
-        const y = y1 + stepY * i;
-        path.push(y * size + x);
-      }
-      return path;
-    }
-
-    function markFound(word, path) {
-      successSound();
-      state.foundSet.add(word);
-      state.foundWords.push(word);
-      state.combo++;
-
-      path.forEach(idx => {
-        const cell = getCell(idx);
-        if (cell) {
-          cell.classList.remove('preview', 'anchor');
-          cell.classList.add('found');
-        }
       });
 
-      const item = document.getElementById('word-' + word);
-      if (item) item.classList.add('done');
+      playBtn.addEventListener("click", () => {
+        forceStartGame();
+      });
 
-      let base = 100 + (word.length * 10);
-      let comboBonus = state.combo > 1 ? (state.combo - 1) * 20 : 0;
-      state.score += base + comboBonus;
+      playAgainBtn.addEventListener("click", () => {
+        endMenu.hidden = true;
+        forceStartGame();
+      });
 
-      const info = state.targetWords.find(w => w.word === word);
-      if (info) {
-        updateLearnText(`✅ ${word}: ${info.info}`);
-        showToast(`Bagus! Kamu menemukan kata "${word}"${comboBonus ? ` + combo ${comboBonus}` : ''}`);
-      }
+      openMenuBtn.addEventListener("click", () => {
+        endMenu.hidden = true;
+        openMenu();
+      });
 
-      updateHUD();
-
-      if (state.foundWords.length === state.targetWords.length) {
-        endGame(true);
-      }
-    }
-
-    function updateLearnText(text) {
-      els.learnText.textContent = text;
-    }
-
-    function handleHint() {
-      ensureAudio();
-      useHint();
-    }
-
-    function useHint() {
-      if (!state.gameActive) return;
-
-      const remaining = state.targetWords.filter(item => !state.foundSet.has(item.word));
-      if (!remaining.length) return;
-
-      state.hintsUsed++;
-      state.score = Math.max(0, state.score - 25);
-
-      const choice = remaining[Math.floor(Math.random() * remaining.length)];
-      const hintIndex = choice.path[0];
-      const cell = getCell(hintIndex);
-
-      if (cell) {
-        cell.classList.add('hint');
-        setTimeout(() => cell.classList.remove('hint'), 1400);
-      }
-
-      updateLearnText(`💡 Petunjuk: ${choice.hint}`);
-      showToast(`Hint: ${choice.hint}`, 2200);
-      updateHUD();
-    }
-
-    function endGame(win) {
-      state.gameActive = false;
-      clearInterval(state.timerInterval);
-
-      const stars = calcStars();
-
-      if (win) {
-        const bonusTime = state.selectedMode === 'challenge' ? state.timeLeft * 3 : 50;
-        state.score += bonusTime;
-        updateHUD();
-        els.endTitle.textContent = 'SAKTI SEKALI! 🌟';
-        els.endSummary.textContent = 'Semua kata berhasil ditemukan. Hebat!';
-        els.endBreakdown.textContent = `Skor akhir: ${state.score}. Kata ditemukan: ${state.foundWords.length}/${state.targetWords.length}. Hint dipakai: ${state.hintsUsed}. Bonus: ${bonusTime}.`;
-        startConfetti();
-      } else {
-        els.endTitle.textContent = 'WAKTU HABIS ⏰';
-        els.endSummary.textContent = 'Tidak apa-apa, coba lagi dan temukan sisanya!';
-        els.endBreakdown.textContent = `Skor sementara: ${state.score}. Kata ditemukan: ${state.foundWords.length}/${state.targetWords.length}. Hint dipakai: ${state.hintsUsed}.`;
-      }
-
-      els.endStars.innerHTML = `
-        <span class="${stars >= 1 ? '' : 'star off'}">★</span>
-        <span class="${stars >= 2 ? '' : 'star off'}">★</span>
-        <span class="${stars >= 3 ? '' : 'star off'}">★</span>
-      `;
-
-      els.endMenu.hidden = false;
+      menuButton.addEventListener("click", () => {
+        openMenu();
+      });
     }
 
     function openMenu() {
-      clearInterval(state.timerInterval);
-      state.gameActive = false;
-      els.startMenu.hidden = false;
-      els.endMenu.hidden = true;
-      stopConfetti();
-      updateLearnText('Pilih level dan tema dulu, lalu cari kata di papan huruf. Kamu bisa geser jari atau mouse dari huruf awal ke huruf akhir.');
+      if (!currentTheme) currentTheme = "keluarga";
+      currentConfig = LEVEL_CONFIG[currentLevel];
+      applyMenuSelection();
+      startMenu.hidden = false;
     }
 
-    function restartSame() {
-      stopConfetti();
-      forceStartGame();
-    }
-
-    function goBack() {
-      location.href = '/#games';
-    }
-
-    function startConfetti() {
-      confettiCanvas.width = window.innerWidth;
-      confettiCanvas.height = window.innerHeight;
-      confettiPieces = Array.from({ length: 120 }, () => ({
-        x: Math.random() * confettiCanvas.width,
-        y: -20 - Math.random() * confettiCanvas.height,
-        w: 6 + Math.random() * 8,
-        h: 8 + Math.random() * 10,
-        vx: -1 + Math.random() * 2,
-        vy: 2 + Math.random() * 4,
-        r: Math.random() * Math.PI,
-        vr: -0.2 + Math.random() * 0.4,
-        color: ['#f59e0b','#ef4444','#10b981','#3b82f6','#a855f7'][Math.floor(Math.random()*5)]
-      }));
-      confettiRunning = true;
-      requestAnimationFrame(runConfetti);
-    }
-
-    function runConfetti() {
-      if (!confettiRunning) return;
-      cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-      confettiPieces.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
-        p.r += p.vr;
-
-        cctx.save();
-        cctx.translate(p.x, p.y);
-        cctx.rotate(p.r);
-        cctx.fillStyle = p.color;
-        cctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
-        cctx.restore();
-
-        if (p.y > confettiCanvas.height + 20) {
-          p.y = -20;
-          p.x = Math.random() * confettiCanvas.width;
-        }
-      });
-      requestAnimationFrame(runConfetti);
-    }
-
-    function stopConfetti() {
-      confettiRunning = false;
-      cctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-    }
-
-    document.addEventListener('pointerup', () => {
-      if (state.pointerDown && state.anchorIndex !== null && state.previewPath.length) {
-        const last = state.previewPath[state.previewPath.length - 1];
-        finishSelection(last);
+    function forceStartGame() {
+      if (!currentTheme) {
+        currentTheme = "keluarga";
+        showToast("Tema belum dipilih, pakai tema Keluarga.");
       }
+      if (!currentLevel) currentLevel = "easy";
+      if (!currentMode) currentMode = "relax";
+      currentConfig = LEVEL_CONFIG[currentLevel];
+      startGame();
+      startMenu.hidden = true;
+      endMenu.hidden = true;
+    }
+
+    function startGame() {
+      const themeData = GAME_DATA[currentTheme];
+      activeWords = [...themeData.words];
+      foundWords.clear();
+      missionBadge.textContent = `Cari semua kata tema ${themeData.label}.`;
+      learnTitle.textContent = "Belajar Kata";
+      learnText.textContent = "Pilih kata di bawah, lalu cari di grid. Setelah ketemu, info singkat muncul di sini.";
+      buildGrid();
+      renderWordList();
+      startTime = Date.now();
+      if (timerId) clearInterval(timerId);
+      timerId = setInterval(() => {
+        updateHUD();
+        if (currentMode === "challenge" && currentConfig.time) {
+          const used = Math.floor((Date.now() - startTime) / 1000);
+          if (used >= currentConfig.time) {
+            clearInterval(timerId);
+            finishGame(false);
+          }
+        }
+      }, 500);
+      updateHUD();
+    }
+
+    function buildGrid() {
+      const size = currentConfig.size;
+      grid = Array.from({ length: size }, () =>
+        Array.from({ length: size }, () => "")
+      );
+      const dirs = (() => {
+        if (currentConfig.allowAllDirs) return [...DIRS_BASIC, ...DIRS_DIAG];
+        if (currentConfig.allowDiagonal) return [...DIRS_BASIC, ...DIRS_DIAG];
+        return DIRS_BASIC;
+      })();
+      const letters = "ABCDEFGHIKLMNOPRSTUWY";
+
+      function placeWord(word) {
+        const w = word.word.toUpperCase();
+        const maxTries = 80;
+        for (let t = 0; t < maxTries; t++) {
+          const [dx, dy] = dirs[Math.floor(Math.random() * dirs.length)];
+          let x = Math.floor(Math.random() * size);
+          let y = Math.floor(Math.random() * size);
+          const endX = x + dx * (w.length - 1);
+          const endY = y + dy * (w.length - 1);
+          if (endX < 0 || endX >= size || endY < 0 || endY >= size) continue;
+          let ok = true;
+          for (let i = 0; i < w.length; i++) {
+            const cx = x + dx * i;
+            const cy = y + dy * i;
+            const ch = grid[cy][cx];
+            if (ch && ch !== w[i]) {
+              ok = false;
+              break;
+            }
+          }
+          if (!ok) continue;
+          for (let i = 0; i < w.length; i++) {
+            const cx = x + dx * i;
+            const cy = y + dy * i;
+            grid[cy][cx] = w[i];
+          }
+          return;
+        }
+      }
+
+      activeWords.forEach(placeWord);
+
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          if (!grid[y][x]) {
+            grid[y][x] = letters[Math.floor(Math.random() * letters.length)];
+          }
+        }
+      }
+
+      renderGrid();
+    }
+
+    function renderGrid() {
+      const size = currentConfig.size;
+      gridEl.style.gridTemplateColumns = `repeat(${size}, var(--cell-size))`;
+      gridEl.innerHTML = "";
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          const div = document.createElement("div");
+          div.className = "cell";
+          div.textContent = grid[y][x];
+          div.dataset.x = x;
+          div.dataset.y = y;
+          gridEl.appendChild(div);
+        }
+      }
+      attachGridEvents();
+    }
+
+    function renderWordList() {
+      wordListEl.innerHTML = "";
+      activeWords.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "word-item";
+        div.dataset.word = item.word;
+        div.textContent = item.word;
+        if (foundWords.has(item.word)) {
+          div.classList.add("done");
+        }
+        div.addEventListener("click", () => {
+          learnTitle.textContent = item.word;
+          learnText.textContent = item.info;
+        });
+        wordListEl.appendChild(div);
+      });
+    }
+
+    function attachGridEvents() {
+      const start = (ev) => {
+        const cell = ev.target.closest(".cell");
+        if (!cell) return;
+        pointerDown = true;
+        dragPath = [];
+        dragCells.clear();
+        addDragCell(cell);
+      };
+
+      const move = (ev) => {
+        if (!pointerDown) return;
+        const touch = ev.touches ? ev.touches[0] : ev;
+        const el = document.elementFromPoint(touch.clientX, touch.clientY);
+        const cell = el && el.classList && el.classList.contains("cell") ? el : el?.closest(".cell");
+        if (!cell) return;
+        addDragCell(cell);
+      };
+
+      const end = () => {
+        if (!pointerDown) return;
+        pointerDown = false;
+        checkSelection();
+        clearPreview();
+      };
+
+      gridEl.onmousedown = start;
+      gridEl.onmousemove = move;
+      document.onmouseup = end;
+
+      gridEl.ontouchstart = (e) => { start(e); };
+      gridEl.ontouchmove = (e) => { move(e); e.preventDefault(); };
+      gridEl.ontouchend = () => { end(); };
+      gridEl.ontouchcancel = () => { end(); };
+    }
+
+    function addDragCell(cell) {
+      const x = Number(cell.dataset.x);
+      const y = Number(cell.dataset.y);
+      const key = `${x},${y}`;
+      if (dragCells.has(key)) return;
+      dragCells.add(key);
+      dragPath.push({ x, y, cell });
+      updatePreview();
+    }
+
+    function updatePreview() {
+      clearPreview();
+      if (!dragPath.length) return;
+      dragPath[0].cell.classList.add("anchor");
+      dragPath.slice(1).forEach(p => p.cell.classList.add("preview"));
+    }
+
+    function clearPreview() {
+      document.querySelectorAll(".cell.preview,.cell.anchor").forEach(c => {
+        c.classList.remove("preview","anchor");
+      });
+    }
+
+    function checkSelection() {
+      if (!dragPath.length) return;
+      const letters = dragPath.map(p => grid[p.y][p.x]).join("");
+      const rev = letters.split("").reverse().join("");
+      const foundItem = activeWords.find(item =>
+        item.word === letters || item.word === rev
+      );
+      if (foundItem) {
+        foundWords.add(foundItem.word);
+        dragPath.forEach(p => p.cell.classList.add("found"));
+        renderWordList();
+        learnTitle.textContent = foundItem.word;
+        learnText.textContent = foundItem.info;
+        const total = activeWords.length;
+        const done = foundWords.size;
+        missionBadge.textContent = `Kata ditemukan: ${done} dari ${total}.`;
+        if (done === total) {
+          finishGame(true);
+        }
+      }
+    }
+
+    function finishGame(success) {
+      if (timerId) clearInterval(timerId);
+      const total = activeWords.length;
+      const usedSec = Math.floor((Date.now() - startTime) / 1000);
+      const labelMode = currentMode === "relax" ? "tanpa batas waktu" :
+        `batas ${formatSeconds(currentConfig.time)}`;
+      let stars = 1;
+      if (success) {
+        if (!currentConfig.time || currentMode === "relax") {
+          stars = 3;
+        } else if (usedSec <= currentConfig.time * 0.5) {
+          stars = 3;
+        } else if (usedSec <= currentConfig.time * 0.8) {
+          stars = 2;
+        }
+      } else {
+        stars = 0;
+      }
+
+      endTitle.textContent = success ? "Hebat!" : "Waktu Habis";
+      endSummary.textContent = success
+        ? `Kamu menemukan semua ${total} kata.`
+        : `Kamu menemukan ${foundWords.size} dari ${total} kata.`;
+
+      endBreakdown.textContent = `Mode ${currentLevel.toUpperCase()} (${labelMode}), waktu bermain ${formatSeconds(usedSec)}.`;
+
+      endStars.innerHTML = "";
+      for (let i = 0; i < 3; i++) {
+        const span = document.createElement("span");
+        span.textContent = i < stars ? "★" : "☆";
+        endStars.appendChild(span);
+      }
+
+      endMenu.hidden = false;
+    }
+
+    hintBtn.addEventListener("click", () => {
+      const remaining = activeWords.filter(w => !foundWords.has(w.word));
+      if (!remaining.length) {
+        showToast("Semua kata sudah ditemukan!");
+        return;
+      }
+      const target = remaining[Math.floor(Math.random() * remaining.length)].word;
+      let cells = [];
+      document.querySelectorAll(".cell").forEach(cell => {
+        const x = Number(cell.dataset.x);
+        const y = Number(cell.dataset.y);
+        cells.push({ x, y, cell });
+      });
+      const dirs = [...DIRS_BASIC, ...DIRS_DIAG];
+      const size = currentConfig.size;
+      for (const { x, y, cell } of cells) {
+        for (const [dx, dy] of dirs) {
+          let s = "";
+          const path = [];
+          for (let i = 0; i < target.length; i++) {
+            const cx = x + dx * i;
+            const cy = y + dy * i;
+            if (cx < 0 || cy < 0 || cx >= size || cy >= size) {
+              s = "";
+              break;
+            }
+            const cCell = document.querySelector(`.cell[data-x="${cx}"][data-y="${cy}"]`);
+            s += cCell.textContent;
+            path.push(cCell);
+          }
+          if (s === target || s.split("").reverse().join("") === target) {
+            path.forEach(c => c.classList.add("hint"));
+            showToast(`Petunjuk: kata ${target}.`);
+            setTimeout(() => {
+              path.forEach(c => c.classList.remove("hint"));
+            }, 900);
+            return;
+          }
+        }
+      }
+      showToast("Petunjuk tidak ditemukan.");
     });
 
-    els.muteBtn.onclick = () => {
-      state.muted = !state.muted;
-      els.muteBtn.textContent = state.muted ? '🔇' : '🔊';
-      showToast(state.muted ? 'Suara dimatikan' : 'Suara dinyalakan');
-    };
-
-    window.addEventListener('resize', () => {
-      confettiCanvas.width = window.innerWidth;
-      confettiCanvas.height = window.innerHeight;
+    shuffleBtn.addEventListener("click", () => {
+      buildGrid();
+      showToast("Grid diacak ulang.");
     });
 
-    initThemeMenu();
-    updateHUD();
-    renderWordList();
+    newThemeBtn.addEventListener("click", () => {
+      openMenu();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      startGame();
+      showToast("Permainan diulang.");
+    });
+
+    buildThemeButtons();
+    initMenuEvents();
+    openMenu();
   </script>
 </body>
 </html>
