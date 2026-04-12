@@ -14,25 +14,18 @@
       --bg1: #083344;
       --bg2: #0f766e;
       --panel: #fffdf7;
-      --panel-2: #fef3c7;
       --line: #1f2937;
       --text: #1f2937;
       --muted: #6b7280;
       --primary: #0ea5a4;
-      --primary-dark: #0f766e;
       --accent: #f59e0b;
-      --accent-2: #f97316;
       --danger: #ef4444;
-      --success: #22c55e;
       --soft-success: #dcfce7;
       --soft-primary: #ccfbf1;
       --soft-accent: #ffedd5;
-      --soft-danger: #fee2e2;
       --white: #ffffff;
       --shadow: 0 8px 0 #111827;
       --shadow-sm: 0 4px 0 #111827;
-      --radius: 18px;
-      --radius-sm: 12px;
       --cell-size: min(8.8vw, 42px);
     }
 
@@ -61,6 +54,10 @@
       justify-content: center;
       align-items: center;
       padding: 14px;
+    }
+
+    [hidden] {
+      display: none !important;
     }
 
     .app {
@@ -238,7 +235,7 @@
       font-size: 1.05rem;
       font-weight: 700;
       text-transform: uppercase;
-      transition: transform .08s ease, background .12s ease, color .12s ease, box-shadow .12s ease;
+      transition: transform .08s ease, background .12s ease, color .12s ease;
       box-shadow: inset 0 -2px 0 rgba(0,0,0,0.08);
     }
 
@@ -303,7 +300,8 @@
       margin-top: 12px;
     }
 
-    button.action {
+    button.action,
+    .menu-btn {
       border: 3px solid var(--line);
       border-radius: 16px;
       box-shadow: var(--shadow-sm);
@@ -314,6 +312,7 @@
       font-weight: 700;
       cursor: pointer;
       transition: .1s;
+      background: white;
     }
 
     button.action:active,
@@ -348,7 +347,8 @@
     }
 
     .overlay[hidden] {
-      display: none;
+      display: none !important;
+      pointer-events: none !important;
     }
 
     .menu-card {
@@ -385,18 +385,6 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
-    }
-
-    .menu-btn {
-      border: 3px solid var(--line);
-      border-radius: 18px;
-      box-shadow: var(--shadow-sm);
-      background: white;
-      padding: 14px 12px;
-      font-family: inherit;
-      font-weight: 700;
-      cursor: pointer;
-      min-height: 56px;
     }
 
     .menu-btn.primary {
@@ -465,55 +453,20 @@
     }
 
     @media (max-width: 540px) {
-      .hud {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .controls {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .word-list {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .menu-row {
-        grid-template-columns: 1fr;
-      }
-
-      .brand-title {
-        font-size: 1rem;
-      }
-
-      .cell {
-        font-size: .95rem;
-      }
+      .hud { grid-template-columns: repeat(2, 1fr); }
+      .controls { grid-template-columns: repeat(2, 1fr); }
+      .word-list { grid-template-columns: 1fr 1fr; }
+      .menu-row { grid-template-columns: 1fr; }
+      .brand-title { font-size: 1rem; }
+      .cell { font-size: .95rem; }
     }
 
     @media (max-width: 390px) {
-      :root {
-        --cell-size: min(8.25vw, 34px);
-      }
-
-      .app {
-        padding: 10px;
-        border-radius: 18px;
-      }
-
-      .panel,
-      .grid-shell {
-        padding: 8px;
-      }
-
-      .word-item {
-        min-height: 48px;
-        font-size: .78rem;
-        padding: 6px 8px;
-      }
-
-      button.action {
-        font-size: .85rem;
-      }
+      :root { --cell-size: min(8.25vw, 34px); }
+      .app { padding: 10px; border-radius: 18px; }
+      .panel, .grid-shell { padding: 8px; }
+      .word-item { min-height: 48px; font-size: .78rem; padding: 6px 8px; }
+      button.action, .menu-btn { font-size: .85rem; }
     }
   </style>
 </head>
@@ -526,7 +479,7 @@
         <h1 class="brand-title">KATA SAKTI ULTRA ✨</h1>
         <p class="brand-sub">Cari kata, pahami makna, naikkan bintangmu!</p>
       </div>
-      <button class="icon-btn" id="muteBtn" aria-label="Nyalakan atau matikan suara">🔊</button>
+      <button type="button" class="icon-btn" id="muteBtn" aria-label="Nyalakan atau matikan suara">🔊</button>
     </section>
 
     <section class="hud">
@@ -581,10 +534,10 @@
     </section>
 
     <section class="controls">
-      <button class="action btn-light" id="menuBtn">MENU</button>
-      <button class="action btn-warning" id="hintBtn">HINT</button>
-      <button class="action btn-primary" id="restartBtn">ULANG</button>
-      <button class="action btn-danger" id="backBtn">KEMBALI</button>
+      <button type="button" class="action btn-light" id="menuBtn">MENU</button>
+      <button type="button" class="action btn-warning" id="hintBtn">HINT</button>
+      <button type="button" class="action btn-primary" id="restartBtn">ULANG</button>
+      <button type="button" class="action btn-danger" id="backBtn">KEMBALI</button>
     </section>
 
     <div class="overlay" id="startMenu">
@@ -601,21 +554,21 @@
           <div class="theme-card">
             <strong>2. Pilih Level</strong>
             <div class="menu-row">
-              <button class="menu-btn" data-level="easy">MUDAH<br><span class="tiny">Grid 8x8, arah dasar</span></button>
-              <button class="menu-btn" data-level="medium">SEDANG<br><span class="tiny">Grid 10x10, diagonal</span></button>
-              <button class="menu-btn" data-level="hard">SULIT<br><span class="tiny">Grid 12x12, arah penuh</span></button>
+              <button type="button" class="menu-btn" data-level="easy">MUDAH<br><span class="tiny">Grid 8x8, arah dasar</span></button>
+              <button type="button" class="menu-btn" data-level="medium">SEDANG<br><span class="tiny">Grid 10x10, diagonal</span></button>
+              <button type="button" class="menu-btn" data-level="hard">SULIT<br><span class="tiny">Grid 12x12, arah penuh</span></button>
             </div>
           </div>
 
           <div class="theme-card">
             <strong>3. Pilih Mode</strong>
             <div class="menu-row">
-              <button class="menu-btn" data-mode="relax">SANTAI<br><span class="tiny">Tanpa timer</span></button>
-              <button class="menu-btn" data-mode="challenge">TANTANGAN<br><span class="tiny">Pakai timer</span></button>
+              <button type="button" class="menu-btn" data-mode="relax">SANTAI<br><span class="tiny">Tanpa timer</span></button>
+              <button type="button" class="menu-btn" data-mode="challenge">TANTANGAN<br><span class="tiny">Pakai timer</span></button>
             </div>
           </div>
 
-          <button class="menu-btn primary" id="playBtn">▶ MAINKAN SEKARANG</button>
+          <button type="button" class="menu-btn primary" id="playBtn">▶ MAINKAN SEKARANG</button>
         </div>
 
         <div class="footer-note">Tips: cari kata dengan menggeser dari huruf pertama ke huruf terakhir.</div>
@@ -634,8 +587,8 @@
           <p id="endBreakdown" style="margin-top:8px;"></p>
         </div>
         <div class="menu-row">
-          <button class="menu-btn primary" id="playAgainBtn">MAIN LAGI</button>
-          <button class="menu-btn" id="backMenuBtn">PILIH MENU</button>
+          <button type="button" class="menu-btn primary" id="playAgainBtn">MAIN LAGI</button>
+          <button type="button" class="menu-btn" id="backMenuBtn">PILIH MENU</button>
         </div>
       </div>
     </div>
@@ -764,7 +717,6 @@
       selectedMode: 'relax',
       size: 8,
       gridData: [],
-      placedWords: [],
       targetWords: [],
       foundWords: [],
       foundSet: new Set(),
@@ -772,7 +724,6 @@
       hintsUsed: 0,
       combo: 0,
       gameActive: false,
-      timer: 0,
       timeLeft: 0,
       timerInterval: null,
       muted: false,
@@ -786,13 +737,13 @@
     const cctx = confettiCanvas.getContext('2d');
     let confettiPieces = [];
     let confettiRunning = false;
-
     let audioCtx = null;
 
     function initThemeMenu() {
       els.themeOptions.innerHTML = '';
       Object.entries(GAME_DATA).forEach(([key, item]) => {
         const btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = 'menu-btn';
         btn.dataset.theme = key;
         btn.innerHTML = `${item.icon} ${item.label}<br><span class="tiny">8 kosakata</span>`;
@@ -874,22 +825,13 @@
       } catch(e) {}
     }
 
-    function clickSound() {
-      playTone(380, 'sine', 0.08, 0.035);
-    }
-
+    function clickSound() { playTone(380, 'sine', 0.08, 0.035); }
     function successSound() {
       playTone(520, 'triangle', 0.16, 0.05);
       setTimeout(() => playTone(740, 'triangle', 0.18, 0.04), 90);
     }
-
-    function failSound() {
-      playTone(190, 'sawtooth', 0.12, 0.03);
-    }
-
-    function warningSound() {
-      playTone(300, 'square', 0.08, 0.025);
-    }
+    function failSound() { playTone(190, 'sawtooth', 0.12, 0.03); }
+    function warningSound() { playTone(300, 'square', 0.08, 0.025); }
 
     function updateHUD() {
       els.scoreEl.textContent = state.score;
@@ -933,6 +875,7 @@
     function startGame() {
       const level = LEVELS[state.selectedLevel];
       const theme = GAME_DATA[state.selectedTheme];
+
       state.size = level.size;
       state.score = 0;
       state.combo = 0;
@@ -940,7 +883,6 @@
       state.foundWords = [];
       state.foundSet = new Set();
       state.gridData = [];
-      state.placedWords = [];
       state.pointerDown = false;
       state.anchorIndex = null;
       state.previewPath = [];
@@ -1031,7 +973,7 @@
             if (!grid[i]) grid[i] = letters[Math.floor(Math.random() * letters.length)];
           }
           state.gridData = grid;
-          state.placedWords = placements;
+          state.targetWords = placements;
           success = true;
         }
 
@@ -1096,11 +1038,6 @@
 
         els.grid.appendChild(cell);
       });
-
-      els.grid.addEventListener('pointerleave', () => {
-        if (state.pointerDown) return;
-        clearPreview();
-      });
     }
 
     function renderWordList() {
@@ -1147,7 +1084,6 @@
 
       const word = path.map(i => state.gridData[i]).join('');
       const reversed = word.split('').reverse().join('');
-
       const match = state.targetWords.find(item => item.word === word || item.word === reversed);
 
       if (match && !state.foundSet.has(match.word)) {
@@ -1359,16 +1295,19 @@
     els.menuBtn.addEventListener('click', openMenu);
     els.restartBtn.addEventListener('click', restartSame);
     els.backBtn.addEventListener('click', () => location.href = '/#games');
+
     els.playBtn.addEventListener('click', () => {
       ensureAudio();
       stopConfetti();
       startGame();
     });
+
     els.playAgainBtn.addEventListener('click', () => {
       ensureAudio();
       stopConfetti();
       startGame();
     });
+
     els.backMenuBtn.addEventListener('click', openMenu);
 
     els.muteBtn.addEventListener('click', () => {
