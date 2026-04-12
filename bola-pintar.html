@@ -28,7 +28,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background-color: #020617; /* fallback */
+      background-color: #020617;
     }
 
     body {
@@ -38,7 +38,7 @@
       align-items: center;
     }
 
-    /* === LAYAR PENUH TANPA BELAHAN HITAM === */
+    /* LAYAR PENUH */
     .app {
       width: 100%;
       height: 100dvh;
@@ -308,6 +308,7 @@
         <div style="font-family: 'Anton'; font-size: 4rem; color: #1e3a8a; line-height: 1; margin-bottom: 12px;" id="finalScoreVal">0</div>
         <p id="finalLevelText">Kamu mencapai Level 1</p>
         <button class="btn btn-primary" onclick="startGame()">Main Lagi</button>
+        <button class="btn" onclick="location.href='/#games'">Kembali ke Portal</button>
       </div>
     </div>
 
@@ -563,7 +564,6 @@
       const horizonY = height * 0.45;
       const floorColor = level >= 4 ? '#b45309' : '#c2410c';
 
-      // Floor
       ctx.fillStyle = floorColor;
       ctx.beginPath();
       ctx.moveTo(0, horizonY);
@@ -572,7 +572,6 @@
       ctx.lineTo(-width * 0.5, height);
       ctx.fill();
 
-      // Lane lines
       ctx.strokeStyle = 'rgba(255,255,255,0.2)';
       ctx.lineWidth = 3;
       ctx.beginPath();
@@ -584,7 +583,6 @@
       ctx.lineTo(width * 1.2, height);
       ctx.stroke();
 
-      // Floor glow
       let g = ctx.createLinearGradient(0, horizonY, 0, height);
       g.addColorStop(0, 'rgba(0,0,0,0.8)');
       g.addColorStop(1, 'rgba(0,0,0,0)');
