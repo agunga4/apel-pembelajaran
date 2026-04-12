@@ -308,13 +308,13 @@
     const HOOP_Y_RATIO = 0.38; 
     const HOOP_SIZE = 80;
 
-    // Ball state
+    // Ball state (tambahan: phase)
     let ball = {
       x: 0,
       y: 0,
-      scale: 1,
-      isShooting: false,
-      progress: 0, // 0 to 1
+      scale: 1.1,
+      phase: 'ready',   // 'ready' | 'flying' | 'in-hoop' | 'returning'
+      progress: 0,
       targetHoop: null,
       startX: 0,
       startY: 0
@@ -323,7 +323,6 @@
     // Swipe state
     let swipeStart = null;
     let particles = [];
-    let flashes = []; // Untuk flash hijau/merah di layar
     let audioCtx = null;
 
     function initAudio() {
@@ -369,18 +368,20 @@
       const dpr = window.devicePixelRatio || 1;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
-      ctx.scale(dpr, dpr);
-      
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
       resetBallPos();
       if (currentProblem) layoutHoops();
     }
     window.addEventListener('resize', resize);
 
     function resetBallPos() {
-      ball.isShooting = false;
-      ball.scale = 1.2;
+      ball.phase = 'ready';
+      ball.progress = 0;
+      ball.scale = 1.1;
       ball.x = width / 2;
-      ball.y = height * 0.85; // Ball at the bottom
+      ball.y = height * 0.78; // selalu muncul di POV tangan
+      ball.targetHoop = null;
     }
 
     function generateProblem() {
@@ -403,7 +404,6 @@
     }
 
     function layoutHoops() {
-      // 3 hoops in the distance
       const positions = [width * 0.18, width * 0.5, width * 0.82];
       const yPos = height * HOOP_Y_RATIO;
       
@@ -436,7 +436,7 @@
       document.getElementById('overScreen').classList.add('hidden');
       resize();
       nextRound();
-      loop();
+      if (!animationId) loop();
     }
 
     function spawnParticles(x, y, color) {
@@ -452,8 +452,6 @@
     }
 
     function processHit(hoop) {
-      ball.isShooting = false; // hide ball in hoop
-      
       const reveal = document.getElementById('revealBox');
       document.getElementById('revealAnswer').innerText = hoop.val;
       
@@ -476,9 +474,11 @@
       }
 
       reveal.classList.add('show');
-      
+
       setTimeout(() => {
         reveal.classList.remove('show');
+        hoops.forEach(h => h.flash = null);
+
         if (lives <= 0) {
           gameActive = false;
           document.getElementById('finalScoreVal').innerText = score;
@@ -486,20 +486,18 @@
         } else {
           nextRound();
         }
-      }, 1200);
+      }, 900);
     }
 
     // DRAWING
     function draw3DCourt() {
-      // Background gradient
       ctx.fillStyle = '#0f172a';
       ctx.fillRect(0, 0, width, height);
 
-      // Horizon line
       const horizonY = height * 0.45;
 
-      // Wooden Floor
-      ctx.fillStyle = '#c2410c'; // dark wood
+      // Floor
+      ctx.fillStyle = '#c2410c';
       ctx.beginPath();
       ctx.moveTo(0, horizonY);
       ctx.lineTo(width, horizonY);
@@ -507,17 +505,14 @@
       ctx.lineTo(-width * 0.5, height);
       ctx.fill();
 
-      // Perspective lines (Lane markings)
+      // Lane lines
       ctx.strokeStyle = 'rgba(255,255,255,0.2)';
       ctx.lineWidth = 3;
       ctx.beginPath();
-      // center
       ctx.moveTo(width * 0.5, horizonY);
       ctx.lineTo(width * 0.5, height);
-      // left
       ctx.moveTo(width * 0.25, horizonY);
       ctx.lineTo(-width * 0.2, height);
-      // right
       ctx.moveTo(width * 0.75, horizonY);
       ctx.lineTo(width * 1.2, height);
       ctx.stroke();
@@ -532,7 +527,6 @@
 
     function drawHoops() {
       hoops.forEach(h => {
-        // Backboard
         ctx.fillStyle = h.flash ? h.flash : '#f8fafc';
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 2;
@@ -541,22 +535,18 @@
         ctx.fill();
         ctx.stroke();
 
-        // Inner square
         ctx.strokeStyle = h.flash ? '#fff' : 'rgba(0,0,0,0.2)';
         ctx.strokeRect(h.x - 20, h.y - 35, 40, 30);
 
-        // Value text (Neutral)
         ctx.fillStyle = h.flash ? '#fff' : '#0f172a';
         ctx.font = '800 24px "Plus Jakarta Sans"';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(h.val, h.x, h.y - 45);
 
-        // Pole
         ctx.fillStyle = '#334155';
         ctx.fillRect(h.x - 4, h.y, 8, height - h.y);
 
-        // Back Rim (drawn behind ball)
         ctx.beginPath();
         ctx.ellipse(h.x, h.y, 25, 8, 0, Math.PI, Math.PI*2);
         ctx.strokeStyle = '#ef4444';
@@ -567,14 +557,12 @@
 
     function drawHoopFronts() {
       hoops.forEach(h => {
-        // Front Rim (drawn in front of ball to create 3D illusion)
         ctx.beginPath();
         ctx.ellipse(h.x, h.y, 25, 8, 0, 0, Math.PI);
         ctx.strokeStyle = '#ef4444';
         ctx.lineWidth = 4;
         ctx.stroke();
 
-        // Net
         ctx.strokeStyle = 'rgba(255,255,255,0.7)';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
@@ -587,12 +575,10 @@
     }
 
     function drawBall() {
-      if(ball.progress >= 1) return; // Ball is inside the net
-
       const r = 35 * ball.scale;
-      
-      // shadow
-      if (!ball.isShooting) {
+
+      // shadow hanya saat di tangan (ready)
+      if (ball.phase === 'ready') {
         ctx.fillStyle = 'rgba(0,0,0,0.4)';
         ctx.beginPath();
         ctx.ellipse(ball.x, ball.y + r + 10, r*0.8, r*0.3, 0, 0, Math.PI*2);
@@ -601,9 +587,10 @@
 
       ctx.save();
       ctx.translate(ball.x, ball.y);
-      ctx.rotate(ball.progress * Math.PI * 4); // spin
+      if (ball.phase === 'flying' || ball.phase === 'returning') {
+        ctx.rotate(ball.progress * Math.PI * 4);
+      }
 
-      // Ball base
       ctx.beginPath();
       ctx.arc(0, 0, r, 0, Math.PI * 2);
       ctx.fillStyle = '#f97316';
@@ -612,7 +599,6 @@
       ctx.strokeStyle = '#431407';
       ctx.stroke();
 
-      // Lines
       ctx.beginPath();
       ctx.moveTo(-r, 0); ctx.lineTo(r, 0);
       ctx.moveTo(0, -r); ctx.lineTo(0, r);
@@ -633,7 +619,7 @@
         let p = particles[i];
         p.x += p.vx;
         p.y += p.vy;
-        p.vy += 0.2; // gravity
+        p.vy += 0.2;
         p.life -= 0.02;
 
         ctx.globalAlpha = Math.max(0, p.life);
@@ -648,70 +634,85 @@
     }
 
     function loop() {
-      if (!gameActive) return;
+      if (!gameActive) {
+        animationId = null;
+        return;
+      }
 
-      // Update Auto-aim Animation
-      if (ball.isShooting) {
-        ball.progress += 0.03; // Speed of shot
+      // update ball phase
+      if (ball.phase === 'flying') {
+        ball.progress += 0.03;
         if (ball.progress >= 1) {
-          ball.progress = 1;
+          ball.progress = 0;
+          ball.phase = 'in-hoop';
           processHit(ball.targetHoop);
         } else {
-          // Calculate 3D Parabola
           const t = ball.progress;
-          // X moves linearly to target
           ball.x = ball.startX + (ball.targetHoop.x - ball.startX) * t;
-          // Scale shrinks as it goes into distance
-          ball.scale = 1.2 - (t * 0.9); // shrinks to 0.3
-          // Y makes a beautiful arc (goes up then down to hoop)
-          const arc = Math.sin(t * Math.PI); // 0 -> 1 -> 0
+          ball.scale = 1.1 - (t * 0.8);
+          const arc = Math.sin(t * Math.PI);
           ball.y = ball.startY + (ball.targetHoop.y - ball.startY) * t - (arc * height * 0.35);
+        }
+      } else if (ball.phase === 'in-hoop' && ball.targetHoop) {
+        ball.progress += 0.05;
+        ball.x = ball.targetHoop.x;
+        ball.y = ball.targetHoop.y + 10;
+        ball.scale = 0.45;
+        if (ball.progress >= 1) {
+          ball.phase = 'returning';
+          ball.progress = 0;
+        }
+      } else if (ball.phase === 'returning' && ball.targetHoop) {
+        const t = ball.progress;
+        const tx = width / 2;
+        const ty = height * 0.78;
+        ball.x = ball.targetHoop.x + (tx - ball.targetHoop.x) * t;
+        ball.y = (ball.targetHoop.y + 10) + (ty - (ball.targetHoop.y + 10)) * t;
+        ball.scale = 0.45 + (1.1 - 0.45) * t;
+        ball.progress += 0.05;
+        if (ball.progress >= 1) {
+          resetBallPos();
         }
       }
 
       draw3DCourt();
       drawHoops();
       drawBall();
-      drawHoopFronts(); // Draw fronts over the ball
+      drawHoopFronts();
       drawParticles();
 
       animationId = requestAnimationFrame(loop);
     }
 
-    // INPUT HANDLING (SMART ASSIST SWIPE)
+    // INPUT HANDLING
     function getPointerPos(e) {
       const touch = e.touches ? e.touches[0] : e;
       return { x: touch.clientX, y: touch.clientY };
     }
 
     function startSwipe(e) {
-      if (!gameActive || ball.isShooting) return;
+      if (!gameActive || ball.phase !== 'ready') return;
       initAudio();
       swipeStart = getPointerPos(e);
     }
 
     function endSwipe(e) {
-      if (!gameActive || ball.isShooting || !swipeStart) return;
-      
+      if (!gameActive || ball.phase !== 'ready' || !swipeStart) return;
+
       const touch = e.changedTouches ? e.changedTouches[0] : e;
       const endX = touch.clientX;
       const endY = touch.clientY;
-      
+
       const dx = endX - swipeStart.x;
       const dy = endY - swipeStart.y;
-      
       swipeStart = null;
 
-      // Must swipe UP (dy < -30) to shoot
-      if (dy > -30) return; 
+      if (dy > -30) return;
 
       document.getElementById('hintText').style.display = 'none';
 
-      // SMART ASSIST: Find the hoop the user aimed at horizontally
-      // Project the swipe vector to the hoop's Y level
       const projectedX = ball.x + (dx / Math.abs(dy)) * (ball.y - hoops[0].y);
-      
-      // Find closest hoop to projected X
+
       let target = hoops[0];
       let minD = Math.abs(projectedX - target.x);
       for(let i=1; i<3; i++) {
@@ -722,8 +723,7 @@
         }
       }
 
-      // Execute Shot
-      ball.isShooting = true;
+      ball.phase = 'flying';
       ball.progress = 0;
       ball.startX = ball.x;
       ball.startY = ball.y;
@@ -736,11 +736,9 @@
     window.addEventListener('touchstart', startSwipe, {passive: false});
     window.addEventListener('touchend', endSwipe, {passive: false});
 
-    // Prevent default scrolling when swiping on the canvas
     canvas.addEventListener('touchmove', (e) => {
-      if(gameActive && !ball.isShooting) e.preventDefault();
+      if(gameActive && ball.phase === 'ready') e.preventDefault();
     }, {passive: false});
-
   </script>
 </body>
 </html>
