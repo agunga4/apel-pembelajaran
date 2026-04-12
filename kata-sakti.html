@@ -70,6 +70,7 @@
       padding: 14px;
       position: relative;
       overflow: hidden;
+      z-index: 1;
     }
 
     .topbar {
@@ -111,6 +112,8 @@
       min-height: 52px;
       font-size: 1.2rem;
       cursor: pointer;
+      position: relative;
+      z-index: 5;
     }
 
     .hud {
@@ -313,6 +316,7 @@
       cursor: pointer;
       transition: .1s;
       background: white;
+      position: relative;
     }
 
     button.action:active,
@@ -344,11 +348,13 @@
       align-items: center;
       justify-content: center;
       padding: 16px;
+      pointer-events: auto;
     }
 
     .overlay[hidden] {
       display: none !important;
       pointer-events: none !important;
+      visibility: hidden !important;
     }
 
     .menu-card {
@@ -360,6 +366,9 @@
       box-shadow: var(--shadow);
       padding: 18px;
       text-align: center;
+      position: relative;
+      z-index: 60;
+      pointer-events: auto;
     }
 
     .menu-card h1,
@@ -379,17 +388,31 @@
       display: grid;
       gap: 10px;
       margin-top: 10px;
+      position: relative;
+      z-index: 61;
     }
 
     .menu-row {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 10px;
+      position: relative;
+      z-index: 61;
+    }
+
+    .menu-btn {
+      z-index: 62;
+      pointer-events: auto;
     }
 
     .menu-btn.primary {
       background: linear-gradient(135deg, #2dd4bf, #14b8a6);
       color: white;
+    }
+
+    #playBtn {
+      z-index: 999;
+      pointer-events: auto !important;
     }
 
     .theme-card {
@@ -399,6 +422,8 @@
       border-radius: 18px;
       background: #f9fafb;
       box-shadow: var(--shadow-sm);
+      position: relative;
+      z-index: 61;
     }
 
     .theme-card strong {
@@ -448,8 +473,8 @@
     #confetti {
       position: fixed;
       inset: 0;
-      pointer-events: none;
-      z-index: 100;
+      pointer-events: none !important;
+      z-index: 10;
     }
 
     @media (max-width: 540px) {
@@ -534,10 +559,10 @@
     </section>
 
     <section class="controls">
-      <button type="button" class="action btn-light" id="menuBtn">MENU</button>
-      <button type="button" class="action btn-warning" id="hintBtn">HINT</button>
-      <button type="button" class="action btn-primary" id="restartBtn">ULANG</button>
-      <button type="button" class="action btn-danger" id="backBtn">KEMBALI</button>
+      <button type="button" class="action btn-light" id="menuBtn" onclick="openMenu()">MENU</button>
+      <button type="button" class="action btn-warning" id="hintBtn" onclick="handleHint()">HINT</button>
+      <button type="button" class="action btn-primary" id="restartBtn" onclick="restartSame()">ULANG</button>
+      <button type="button" class="action btn-danger" id="backBtn" onclick="goBack()">KEMBALI</button>
     </section>
 
     <div class="overlay" id="startMenu">
@@ -568,7 +593,14 @@
             </div>
           </div>
 
-          <button type="button" class="menu-btn primary" id="playBtn">▶ MAINKAN SEKARANG</button>
+          <button
+            type="button"
+            class="menu-btn primary"
+            id="playBtn"
+            onclick="forceStartGame()"
+          >
+            ▶ MAINKAN SEKARANG
+          </button>
         </div>
 
         <div class="footer-note">Tips: cari kata dengan menggeser dari huruf pertama ke huruf terakhir.</div>
@@ -587,8 +619,8 @@
           <p id="endBreakdown" style="margin-top:8px;"></p>
         </div>
         <div class="menu-row">
-          <button type="button" class="menu-btn primary" id="playAgainBtn">MAIN LAGI</button>
-          <button type="button" class="menu-btn" id="backMenuBtn">PILIH MENU</button>
+          <button type="button" class="menu-btn primary" onclick="forceStartGame()">MAIN LAGI</button>
+          <button type="button" class="menu-btn" onclick="openMenu()">PILIH MENU</button>
         </div>
       </div>
     </div>
@@ -701,13 +733,6 @@
       endStars: document.getElementById('endStars'),
       toast: document.getElementById('toast'),
       muteBtn: document.getElementById('muteBtn'),
-      menuBtn: document.getElementById('menuBtn'),
-      hintBtn: document.getElementById('hintBtn'),
-      restartBtn: document.getElementById('restartBtn'),
-      backBtn: document.getElementById('backBtn'),
-      playBtn: document.getElementById('playBtn'),
-      playAgainBtn: document.getElementById('playAgainBtn'),
-      backMenuBtn: document.getElementById('backMenuBtn'),
       themeOptions: document.getElementById('themeOptions')
     };
 
@@ -747,25 +772,25 @@
         btn.className = 'menu-btn';
         btn.dataset.theme = key;
         btn.innerHTML = `${item.icon} ${item.label}<br><span class="tiny">8 kosakata</span>`;
-        btn.addEventListener('click', () => {
+        btn.onclick = () => {
           state.selectedTheme = key;
           refreshMenuSelections();
-        });
+        };
         els.themeOptions.appendChild(btn);
       });
 
       document.querySelectorAll('[data-level]').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.onclick = () => {
           state.selectedLevel = btn.dataset.level;
           refreshMenuSelections();
-        });
+        };
       });
 
       document.querySelectorAll('[data-mode]').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.onclick = () => {
           state.selectedMode = btn.dataset.mode;
           refreshMenuSelections();
-        });
+        };
       });
 
       refreshMenuSelections();
@@ -870,6 +895,17 @@
       if (foundRatio >= 0.75) return 2;
       if (foundRatio >= 0.35) return 1;
       return 0;
+    }
+
+    function forceStartGame() {
+      try {
+        ensureAudio();
+        stopConfetti();
+        startGame();
+      } catch (err) {
+        console.error('Gagal menjalankan game:', err);
+        alert('Tombol mulai tertekan, tapi ada error di script. Cek console browser.');
+      }
     }
 
     function startGame() {
@@ -1168,6 +1204,11 @@
       els.learnText.textContent = text;
     }
 
+    function handleHint() {
+      ensureAudio();
+      useHint();
+    }
+
     function useHint() {
       if (!state.gameActive) return;
 
@@ -1231,7 +1272,11 @@
 
     function restartSame() {
       stopConfetti();
-      startGame();
+      forceStartGame();
+    }
+
+    function goBack() {
+      location.href = '/#games';
     }
 
     function startConfetti() {
@@ -1287,34 +1332,11 @@
       }
     });
 
-    els.hintBtn.addEventListener('click', () => {
-      ensureAudio();
-      useHint();
-    });
-
-    els.menuBtn.addEventListener('click', openMenu);
-    els.restartBtn.addEventListener('click', restartSame);
-    els.backBtn.addEventListener('click', () => location.href = '/#games');
-
-    els.playBtn.addEventListener('click', () => {
-      ensureAudio();
-      stopConfetti();
-      startGame();
-    });
-
-    els.playAgainBtn.addEventListener('click', () => {
-      ensureAudio();
-      stopConfetti();
-      startGame();
-    });
-
-    els.backMenuBtn.addEventListener('click', openMenu);
-
-    els.muteBtn.addEventListener('click', () => {
+    els.muteBtn.onclick = () => {
       state.muted = !state.muted;
       els.muteBtn.textContent = state.muted ? '🔇' : '🔊';
       showToast(state.muted ? 'Suara dimatikan' : 'Suara dinyalakan');
-    });
+    };
 
     window.addEventListener('resize', () => {
       confettiCanvas.width = window.innerWidth;
